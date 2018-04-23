@@ -1,0 +1,19 @@
+{
+    "name": "structured-regular-expressions",
+    "displayName": "Structured Regular Expressions",
+    "description": "A library to implement Structured Regular Expressions as described in the SAM text editor.",
+    "version": "0.0.1",
+    "publisher": "peterschwier",
+    "main": "./out/main",
+    "scripts": {
+        "parser": "pegjs -o ./out/parser/parser.js ./src/parser/parser.pegjs",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "test": "npm run compile"
+    },
+    "devDependencies": {
+        "typescript": "^2.6.1",
+        "tslint": "^5.8.0",
+        "@types/node": "^7.0.43"
+    }
+}
