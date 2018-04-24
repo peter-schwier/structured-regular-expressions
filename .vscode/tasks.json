@@ -7,6 +7,10 @@
             "type": "npm",
             "script": "mocha:watch",
             "isBackground": true,
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
             "problemMatcher": {
                 "owner": "mocha",
                 "fileLocation": "relative",
@@ -30,7 +34,11 @@
             "problemMatcher": [
                 "$tsc-watch"
             ],
-            "isBackground": true
+            "isBackground": true,
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
         }
     ]
 }
