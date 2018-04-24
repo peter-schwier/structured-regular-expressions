@@ -13,7 +13,7 @@ module.exports = function CustomReporter(runner) {
         var message = lines.shift();
         lines.forEach(line => {
             line = line.replace(/^.*\(/, "").replace(/\)/, "");
-            console.log("MOCHA ERROR %s %s", line, message);
+            console.log("MOCHA ERROR %s %s: %s", line, test.fullTitle(), message);
         });
     });
 };

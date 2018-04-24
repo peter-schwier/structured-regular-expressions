@@ -3,107 +3,82 @@ import { expect } from "chai";
 import { Line } from "./line";
 import { Document } from '../models/document';
 
-function getLine(line?: number): Line {
-    if (line === undefined) {
-        line = 1;
-    }
-    return new Line(line);
-}
-
-function getDocument(text?: string): Document {
-    if (text === undefined) {
-        text = "asdf";
-    }
-    return new Document(text, []);
-}
-
 describe(Line.name, () => {
-    it('has a line property', () => {
-        expect(getLine()).has.property("line").that.is.a("number");
-    });
-    describe("getRangeForward function", () => {
-        it('exists', () => {
-            expect(getLine())
-                .has.property("getRangeForward")
-                .that.is.a("function");
-        });
-        it('takes two arguments', () => {
-            expect(getLine())
-                .has.property("getRangeForward")
-                .has.property("length")
-                .that.equals(2);
-        });
-    });
     describe("0", () => {
-        let line = getLine(0);
+        let address = new Line(0);
         describe("on empty string", () => {
-            let document = getDocument("");
-            it("starts at 0", () => {
-                expect(line.getRangeForward(document, 0))
-                    .has.property("start").that.equals(0);
+            let document = new Document("", []);
+            let start = 0; let end = 0;
+            it(`starts at ${start}`, () => {
+                let range = address.getRangeForward(document, 0);
+                expect(range).has.property("start").that.equals(start);
             });
-            it("ends at 0", () => {
-                expect(line.getRangeForward(document, 0))
-                    .has.property("end").that.equals(0);
+            it(`ends at ${end}`, () => {
+                let range = address.getRangeForward(document, 0);
+                expect(range).has.property("end").that.equals(end);
             });
         });
         describe("on one line string", () => {
-            let document = getDocument("asdf");
-            it("starts at 0", () => {
-                expect(line.getRangeForward(document, 0))
-                    .has.property("start").that.equals(0);
+            let document = new Document("asdf", []);
+            let start = 0; let end = 0;
+            it(`starts at ${start}`, () => {
+                let range = address.getRangeForward(document, 0);
+                expect(range).has.property("start").that.equals(start);
             });
-            it("ends at 0", () => {
-                expect(line.getRangeForward(document, 0))
-                    .has.property("end").that.equals(0);
+            it(`ends at ${end}`, () => {
+                let range = address.getRangeForward(document, 0);
+                expect(range).has.property("end").that.equals(end);
             });
         });
         describe("on multi line string", () => {
-            let document = getDocument("asdf\nfdsa\nasdf");
-            it("starts at 0", () => {
-                expect(line.getRangeForward(document, 0))
-                    .has.property("start").that.equals(0);
+            let document = new Document("asdf\nfdsa\nasdf", []);
+            let start = 0; let end = 0;
+            it(`starts at ${start}`, () => {
+                let range = address.getRangeForward(document, 0);
+                expect(range).has.property("start").that.equals(start);
             });
-            it("ends at 0", () => {
-                expect(line.getRangeForward(document, 0))
-                    .has.property("end").that.equals(0);
+            it(`ends at ${end}`, () => {
+                let range = address.getRangeForward(document, 0);
+                expect(range).has.property("end").that.equals(end);
             });
         });
     });
     describe("1", () => {
-        let line = getLine(1);
+        let address = new Line(1);
         describe("on empty string", () => {
-            let document = getDocument("");
-            it("starts at 0", () => {
-                expect(line.getRangeForward(document, 0))
-                    .has.property("start").that.equals(0);
+            let document = new Document("", []);
+            let start = 0; let end = 0;
+            it(`starts at ${start}`, () => {
+                let range = address.getRangeForward(document, 0);
+                expect(range).has.property("start").that.equals(start);
             });
-            it("ends at 0", () => {
-                let range = line.getRangeForward(document, 0);
-                expect(range)
-                    .has.property("end").that.equals(0);
+            it(`ends at ${end}`, () => {
+                let range = address.getRangeForward(document, 0);
+                expect(range).has.property("end").that.equals(end);
             });
         });
         describe("on one line string", () => {
-            let document = getDocument("asdf");
-            it("starts at 0", () => {
-                let range = line.getRangeForward(document, 0);
-                expect(range).has.property("start").that.equals(0);
+            let document = new Document("asdf", []);
+            let start = 0; let end = 4;
+            it(`starts at ${start}`, () => {
+                let range = address.getRangeForward(document, 0);
+                expect(range).has.property("start").that.equals(start);
             });
-            it("ends at 4", () => {
-                expect(line.getRangeForward(document, 0))
-                    .has.property("end").that.equals(4);
+            it(`ends at ${end}`, () => {
+                let range = address.getRangeForward(document, 0);
+                expect(range).has.property("end").that.equals(end);
             });
         });
         describe("on multi line string", () => {
-            let document = getDocument("asdf\nfdsa\nasdf");
-            it("starts at 0", () => {
-                expect(line.getRangeForward(document, 0))
-                    .has.property("start").that.equals(0);
+            let document = new Document("asdf\nfdsa\nasdf", []);
+            let start = 0; let end = 5;
+            it(`starts at ${start}`, () => {
+                let range = address.getRangeForward(document, 0);
+                expect(range).has.property("start").that.equals(start);
             });
-            it("ends at 5", () => {
-                expect(line.getRangeForward(document, 0))
-                    .has.property("end").that.equals(5);
+            it(`ends at ${end}`, () => {
+                let range = address.getRangeForward(document, 0);
+                expect(range).has.property("end").that.equals(end);
             });
         });
     });
