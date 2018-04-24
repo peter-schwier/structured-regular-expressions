@@ -7,14 +7,20 @@
     "main": "./out/main",
     "scripts": {
         "parser": "pegjs -o ./out/parser/parser.js ./src/parser/parser.pegjs",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "test": "npm run compile"
+        "tsc": "tsc -p ./",
+        "tsc:watch": "npm run tsc --silent -- -watch",
+        "mocha": "mocha -r ts-node/register src/**/*.spec.ts",
+        "mocha:watch": "onchange \"src/**/*.ts\" --initial -- npm run mocha --silent -- --reporter src/mochareporter.js",
+        "test": "npm run tsc --silent && npm run mocha --silent"
     },
     "devDependencies": {
-        "typescript": "^2.6.1",
-        "tslint": "^5.8.0",
+        "@types/mocha": "^5.2.0",
         "@types/node": "^7.0.43",
-        "pegjs": "^0.10.0"
+        "mocha": "^5.1.1",
+        "onchange": "^3.3.0",
+        "pegjs": "^0.10.0",
+        "ts-node": "^6.0.0",
+        "tslint": "^5.8.0",
+        "typescript": "^2.8.3"
     }
 }
