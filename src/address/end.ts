@@ -4,7 +4,7 @@ import { Address } from "./address";
 
 export class End implements Address {
     constructor() { }
-    getRangeForward(document: Document, fromPosition: number): Range {
+    getRange(document: Document): Range {
         return new Range(document.text.length, document.text.length);
     }
 }

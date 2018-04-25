@@ -4,7 +4,7 @@ import { Address } from "./address";
 
 export class Dot implements Address {
     constructor() { }
-    getRangeForward(document: Document, fromPosition: number): Range {
+    getRange(document: Document): Range {
         if (document.selections.length > 0) {
             return document.selections[0];
         } else {

@@ -2,5 +2,9 @@ import { Range } from "../models/range";
 import { Document } from "../models/document";
 
 export interface Address {
-    getRangeForward(document: Document, fromPosition: number): Range;
+    getRange(document: Document): Range;
+}
+
+export interface ForwardAddress {
+    forward(fromPosition: number): Address;
 }

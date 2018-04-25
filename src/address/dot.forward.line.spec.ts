@@ -5,18 +5,19 @@ import { Forward } from './forward';
 import { Line } from './line';
 import { Range } from '../models/range';
 import { Dot } from './dot';
+import { Address } from './address';
 
 describe(".+0", () => {
-    let address = new Forward(new Dot(), new Line(0));
+    let address :Address = new Forward(new Dot(), new Line(0));
     describe("on empty string", () => {
         let document = new Document("", []);
         let start = 0; let end = 0;
         it(`starts at ${start}`, () => {
-            let range = address.getRangeForward(document, 0);
+            let range = address.getRange(document);
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRangeForward(document, 0);
+            let range = address.getRange(document);
             expect(range).has.property("end").that.equals(end);
         });
     });
@@ -24,11 +25,11 @@ describe(".+0", () => {
         let document = new Document("asdf", [new Range(0, 2)]);
         let start = 2; let end = 4;
         it(`starts at ${start}`, () => {
-            let range = address.getRangeForward(document, 0);
+            let range = address.getRange(document);
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRangeForward(document, 0);
+            let range = address.getRange(document);
             expect(range).has.property("end").that.equals(end);
         });
     });
@@ -36,11 +37,11 @@ describe(".+0", () => {
         let document = new Document("asdf\nfdsa\nasdf", [new Range(2, 7)]);
         let start = 7; let end = 10;
         it(`starts at ${start}`, () => {
-            let range = address.getRangeForward(document, 0);
+            let range = address.getRange(document);
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRangeForward(document, 0);
+            let range = address.getRange(document);
             expect(range).has.property("end").that.equals(end);
         });
     });
@@ -52,11 +53,11 @@ describe(".+1", () => {
         let document = new Document("", []);
         let start = 0; let end = 0;
         it(`starts at ${start}`, () => {
-            let range = address.getRangeForward(document, 0);
+            let range = address.getRange(document);
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRangeForward(document, 0);
+            let range = address.getRange(document);
             expect(range).has.property("end").that.equals(end);
         });
     });
@@ -64,11 +65,11 @@ describe(".+1", () => {
         let document = new Document("asdf", [new Range(0, 2)]);
         let start = 4; let end = 4;
         it(`starts at ${start}`, () => {
-            let range = address.getRangeForward(document, 0);
+            let range = address.getRange(document);
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRangeForward(document, 0);
+            let range = address.getRange(document);
             expect(range).has.property("end").that.equals(end);
         });
     });
@@ -76,11 +77,11 @@ describe(".+1", () => {
         let document = new Document("asdf\nfdsa\nasdf", [new Range(2, 7)]);
         let start = 10; let end = 14;
         it(`starts at ${start}`, () => {
-            let range = address.getRangeForward(document, 0);
+            let range = address.getRange(document);
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRangeForward(document, 0);
+            let range = address.getRange(document);
             expect(range).has.property("end").that.equals(end);
         });
     });

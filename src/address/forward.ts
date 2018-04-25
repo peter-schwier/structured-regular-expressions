@@ -1,12 +1,12 @@
 import { Document } from "../models/document";
 import { Range } from "../models/range";
-import { Address } from "./address";
+import { Address, ForwardAddress } from "./address";
 
 export class Forward implements Address {
-    constructor(public readonly start: Address, public readonly next: Address) { }
+    constructor(public readonly start: Address, public readonly next: ForwardAddress) { }
 
-    getRangeForward(document: Document, fromPosition: number): Range {
-        let startRange = this.start.getRangeForward(document, fromPosition);
-        return this.next.getRangeForward(document, startRange.end);
+    getRange(document: Document): Range {
+        let startRange = this.start.getRange(document);
+        return this.next.forward(startRange.end).getRange(document);
     }
 }
