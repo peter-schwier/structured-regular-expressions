@@ -8,7 +8,7 @@ import { Document } from '../../src/models/document';
 describe("/df/+/as/", () => {
     let address: Address = new Forward(new Regex("df").forwardFromPosition(0), new Regex("as"));
     describe("on multi line string", () => {
-        let document = new Document("asdf\nfdsa\nasdf", []);
+        let document = new Document("asdf\nfdsa\nasdf", [], []);
         let start = 10; let end = 12;
         it(`starts at ${start}`, () => {
             let range = address.getRange(document);

@@ -1,12 +1,14 @@
 import { Range } from "./range";
+import { Print } from "./print";
 
 export class Document {
     constructor(
         public readonly text: string,
-        public readonly selections: Range[]
-    ) {}
+        public readonly selections: Range[],
+        public readonly changes: Print[]
+    ) { }
 
-    lines() : Range[] {
+    lines(): Range[] {
         let regex = new RegExp(".*\n?", "g");
 
         let ranges = [];
@@ -28,5 +30,11 @@ export class Document {
             }
         }
         return ranges;
+    }
+
+    print(range: Range): Document {
+        let text = this.text.substring(range.start, range.end);
+        let print = new Print(text);
+        return new Document(this.text, this.selections, this.changes.concat(print));
     }
 }

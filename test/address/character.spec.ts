@@ -8,7 +8,7 @@ describe(Character.name, () => {
     describe("#0", () => {
         let address: Address = new Character(0).forwardFromPosition(0);
         describe("on empty string", () => {
-            let document = new Document("", []);
+            let document = new Document("", [], []);
             let start = 0; let end = 0;
             it(`starts at ${start}`, () => {
                 let range = address.getRange(document);
@@ -20,7 +20,7 @@ describe(Character.name, () => {
             });
         });
         describe("on one line string", () => {
-            let document = new Document("asdf", []);
+            let document = new Document("asdf", [], []);
             let start = 0; let end = 0;
             it(`starts at ${start}`, () => {
                 let range = address.getRange(document);
@@ -32,7 +32,7 @@ describe(Character.name, () => {
             });
         });
         describe("on multi line string", () => {
-            let document = new Document("asdf\nfdsa\nasdf", []);
+            let document = new Document("asdf\nfdsa\nasdf", [], []);
             let start = 0; let end = 0;
             it(`starts at ${start}`, () => {
                 let range = address.getRange(document);
@@ -47,7 +47,7 @@ describe(Character.name, () => {
     describe("#1", () => {
         let address = new Character(1).forwardFromPosition(0);
         describe("on empty string", () => {
-            let document = new Document("", []);
+            let document = new Document("", [], []);
             let start = 0; let end = 0;
             it(`starts at ${start}`, () => {
                 let range = address.getRange(document);
@@ -59,7 +59,7 @@ describe(Character.name, () => {
             });
         });
         describe("on one line string", () => {
-            let document = new Document("asdf", []);
+            let document = new Document("asdf", [], []);
             let start = 1; let end = 1;
             it(`starts at ${start}`, () => {
                 let range = address.getRange(document);
@@ -71,7 +71,7 @@ describe(Character.name, () => {
             });
         });
         describe("on multi line string", () => {
-            let document = new Document("asdf\nfdsa\nasdf", []);
+            let document = new Document("asdf\nfdsa\nasdf", [], []);
             let start = 1; let end = 1;
             it(`starts at ${start}`, () => {
                 let range = address.getRange(document);

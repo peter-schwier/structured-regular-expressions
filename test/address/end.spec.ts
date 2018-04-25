@@ -9,7 +9,7 @@ describe(End.name, () => {
 
     describe("getRangeForward function", () => {
         describe("on empty string", () => {
-            let document = new Document("", []);
+            let document = new Document("", [], []);
             let start = 0; let end = 0;
             it(`starts at ${start}`, () => {
                 let range = address.getRange(document);
@@ -21,7 +21,7 @@ describe(End.name, () => {
             });
         });
         describe("on one line string", () => {
-            let document = new Document("asdf", []);
+            let document = new Document("asdf", [], []);
             let start = document.text.length; let end = document.text.length;
             it(`starts at ${start}`, () => {
                 let range = address.getRange(document);
@@ -33,7 +33,7 @@ describe(End.name, () => {
             });
         });
         describe("on multi line string", () => {
-            let document = new Document("asdf\nfdsa\nasdf", []);
+            let document = new Document("asdf\nfdsa\nasdf", [], []);
             let start = document.text.length; let end = document.text.length;
             it(`starts at ${start}`, () => {
                 let range = address.getRange(document);

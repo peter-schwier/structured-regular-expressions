@@ -4,7 +4,7 @@ import { Document } from '../../src/models/document';
 
 describe('Document', () => {
     function getDocument() {
-        return new Document("asdf", []);
+        return new Document("asdf", [], []);
     }
     it('is a Document', () => {
         expect(getDocument()).to.be.instanceof(Document);

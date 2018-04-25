@@ -10,7 +10,7 @@ describe(Backward.name, () => {
         let address : Address = new Backward(new Line(2).forwardFromPosition(0), new Line(1));
         
         describe("on multi line string", () => {
-            let document = new Document("asdf\nfdsa\nasdf", []);
+            let document = new Document("asdf\nfdsa\nasdf", [], []);
             let start = 0; let end = 5;
             it(`starts at ${start}`, () => {
                 let range = address.getRange(document);
@@ -26,7 +26,7 @@ describe(Backward.name, () => {
         let address : Address = new Backward(new Line(3).forwardFromPosition(0), new Line(1));
         
         describe("on multi line string", () => {
-            let document = new Document("asdf\nfdsa\nasdf", []);
+            let document = new Document("asdf\nfdsa\nasdf", [], []);
             let start = 5; let end = 10;
             it(`starts at ${start}`, () => {
                 let range = address.getRange(document);
