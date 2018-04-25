@@ -8,3 +8,7 @@ export interface Address {
 export interface ForwardAddress {
     forward(fromPosition: number): Address;
 }
+
+export interface BackwardAddress {
+    backward(fromPosition: number): Address;
+}
