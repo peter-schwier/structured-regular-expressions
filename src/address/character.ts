@@ -2,14 +2,11 @@ import { Document } from "../models/document";
 import { Range } from "../models/range";
 import { Address, ForwardAddress, BackwardAddress } from "./address";
 
-export class Charcter implements Address, ForwardAddress, BackwardAddress {
+export class Charcter implements ForwardAddress, BackwardAddress {
     constructor(private readonly character: number) {
         if (character < 0) {
             throw new RangeError(`Cannot have a character number less than 0: ${character}`);
         }
-    }
-    getRange(document: Document): Range {
-        return this.forward(0).getRange(document);
     }
     forward(fromPosition: number): Address {
         return new ForwardCharacter(this.character, fromPosition);

@@ -6,7 +6,7 @@ import { Address } from './address';
 
 describe(Charcter.name, () => {
     describe("#0", () => {
-        let address: Address = new Charcter(0);
+        let address: Address = new Charcter(0).forward(0);
         describe("on empty string", () => {
             let document = new Document("", []);
             let start = 0; let end = 0;
@@ -45,7 +45,7 @@ describe(Charcter.name, () => {
         });
     });
     describe("#1", () => {
-        let address = new Charcter(1);
+        let address = new Charcter(1).forward(0);
         describe("on empty string", () => {
             let document = new Document("", []);
             let start = 0; let end = 0;
