@@ -1,13 +1,13 @@
 import 'mocha';
 import { expect } from "chai";
 import { Document } from '../models/document';
-import { Add } from './add';
+import { Forward } from './forward';
 import { Line } from './line';
 import { Range } from '../models/range';
 import { Dot } from './dot';
 
 describe(".+0", () => {
-    let address = new Add(new Dot(), new Line(0));
+    let address = new Forward(new Dot(), new Line(0));
     describe("on empty string", () => {
         let document = new Document("", []);
         let start = 0; let end = 0;
@@ -47,7 +47,7 @@ describe(".+0", () => {
 });
 
 describe(".+1", () => {
-    let address = new Add(new Dot(), new Line(1));
+    let address = new Forward(new Dot(), new Line(1));
     describe("on empty string", () => {
         let document = new Document("", []);
         let start = 0; let end = 0;

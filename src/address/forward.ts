@@ -2,7 +2,7 @@ import { Document } from "../models/document";
 import { Range } from "../models/range";
 import { Address } from "./address";
 
-export class Add implements Address {
+export class Forward implements Address {
     constructor(public readonly start: Address, public readonly next: Address) { }
 
     getRangeForward(document: Document, fromPosition: number): Range {
