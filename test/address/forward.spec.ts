@@ -1,13 +1,13 @@
 import 'mocha';
 import { expect } from "chai";
-import { Document } from '../models/document';
-import { Forward } from './forward';
-import { Line } from './line';
-import { Address } from './address';
+import { Address } from '../../src/address/address';
+import { Forward } from '../../src/address/forward';
+import { Line } from '../../src/address/line';
+import { Document } from '../../src/models/document';
 
 describe(Forward.name, () => {
     describe("0+0", () => {
-        let address : Address = new Forward(new Line(0).forwardFromPosition(0), new Line(0));
+        let address: Address = new Forward(new Line(0).forwardFromPosition(0), new Line(0));
         describe("on empty string", () => {
             let document = new Document("", []);
             let start = 0; let end = 0;
@@ -45,7 +45,7 @@ describe(Forward.name, () => {
             });
         });
     });
-    
+
     describe("0+1", () => {
         let address = new Forward(new Line(0).forwardFromPosition(0), new Line(1));
         describe("on empty string", () => {
@@ -85,7 +85,7 @@ describe(Forward.name, () => {
             });
         });
     });
-    
+
     describe("1+0", () => {
         let address = new Forward(new Line(1).forwardFromPosition(0), new Line(0));
         describe("on empty string", () => {

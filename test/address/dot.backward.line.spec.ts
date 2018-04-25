@@ -1,14 +1,14 @@
 import 'mocha';
 import { expect } from "chai";
-import { Document } from '../models/document';
-import { Backward } from './backward';
-import { Line } from './line';
-import { Range } from '../models/range';
-import { Dot } from './dot';
-import { Address } from './address';
+import { Address } from '../../src/address/address';
+import { Backward } from '../../src/address/backward';
+import { Dot } from '../../src/address/dot';
+import { Line } from '../../src/address/line';
+import { Document } from '../../src/models/document';
+import { Range } from '../../src/models/range';
 
 describe(".-0", () => {
-    let address :Address = new Backward(new Dot(), new Line(0));
+    let address: Address = new Backward(new Dot(), new Line(0));
     describe("on empty string", () => {
         let document = new Document("", []);
         let start = 0; let end = 0;

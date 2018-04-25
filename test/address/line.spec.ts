@@ -1,8 +1,8 @@
 import 'mocha';
 import { expect } from "chai";
-import { Line } from "./line";
-import { Document } from '../models/document';
-import { Address } from './address';
+import { Line } from '../../src/address/line';
+import { Address } from '../../src/address/address';
+import { Document } from '../../src/models/document';
 
 describe(Line.name, () => {
     describe("0", () => {

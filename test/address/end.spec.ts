@@ -1,11 +1,11 @@
 import 'mocha';
 import { expect } from "chai";
-import { End } from "./end";
-import { Document } from '../models/document';
-import { Address } from './address';
+import { End } from '../../src/address/end';
+import { Address } from '../../src/address/address';
+import { Document } from '../../src/models/document';
 
 describe(End.name, () => {
-    let address : Address = new End();
+    let address: Address = new End();
 
     describe("getRangeForward function", () => {
         describe("on empty string", () => {

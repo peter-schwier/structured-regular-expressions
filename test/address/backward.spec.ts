@@ -1,9 +1,9 @@
 import 'mocha';
 import { expect } from "chai";
-import { Document } from '../models/document';
-import { Backward } from './backward';
-import { Line } from './line';
-import { Address } from './address';
+import { Backward } from '../../src/address/backward';
+import { Address } from '../../src/address/address';
+import { Line } from '../../src/address/line';
+import { Document } from '../../src/models/document';
 
 describe(Backward.name, () => {
     describe(".+2-1", () => {

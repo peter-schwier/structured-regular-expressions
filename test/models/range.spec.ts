@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from "chai";
-import { Range } from "./range";
+import { Range } from "../../src/models/range";
 
 describe('Range', () => {
     it('has two arguments', () => {

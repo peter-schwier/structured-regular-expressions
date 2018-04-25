@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from "chai";
-import { Document } from "./document";
+import { Document } from '../../src/models/document';
 
 describe('Document', () => {
     function getDocument() {
