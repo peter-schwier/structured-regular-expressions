@@ -6,8 +6,8 @@ import { Line } from './line';
 import { Address } from './address';
 
 describe(Backward.name, () => {
-    describe("2-1", () => {
-        let address : Address = new Backward(new Line(2), new Line(1));
+    describe(".+2-1", () => {
+        let address : Address = new Backward(new Line(2).forward(0), new Line(1));
         
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf", []);
@@ -23,7 +23,7 @@ describe(Backward.name, () => {
         });
     });
     describe("3-1", () => {
-        let address : Address = new Backward(new Line(3), new Line(1));
+        let address : Address = new Backward(new Line(3).forward(0), new Line(1));
         
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf", []);

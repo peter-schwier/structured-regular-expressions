@@ -2,14 +2,11 @@ import { Document } from "../models/document";
 import { Range } from "../models/range";
 import { Address, ForwardAddress, BackwardAddress } from "./address";
 
-export class Line implements Address, ForwardAddress, BackwardAddress {
+export class Line implements ForwardAddress, BackwardAddress {
     constructor(private readonly line: number) {
         if (line < 0) {
             throw new RangeError(`Cannot have a line number less than 0: ${line}`);
         }
-    }
-    getRange(document: Document): Range {
-        return this.forward(0).getRange(document);
     }
     forward(fromPosition: number): Address {
         return new ForwardLine(this.line, fromPosition);

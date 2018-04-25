@@ -6,7 +6,7 @@ import { Address } from './address';
 
 describe(Line.name, () => {
     describe("0", () => {
-        let address: Address = new Line(0);
+        let address: Address = new Line(0).forward(0);
         describe("on empty string", () => {
             let document = new Document("", []);
             let start = 0; let end = 0;
@@ -45,7 +45,7 @@ describe(Line.name, () => {
         });
     });
     describe("1", () => {
-        let address = new Line(1);
+        let address = new Line(1).forward(0);
         describe("on empty string", () => {
             let document = new Document("", []);
             let start = 0; let end = 0;
