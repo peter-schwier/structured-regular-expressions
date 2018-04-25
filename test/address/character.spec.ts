@@ -1,12 +1,12 @@
 import 'mocha';
 import { expect } from "chai";
-import { Charcter } from '../../src/address/character';
+import { Character } from '../../src/address/character';
 import { Address } from '../../src/address/address';
 import { Document } from '../../src/models/document';
 
-describe(Charcter.name, () => {
+describe(Character.name, () => {
     describe("#0", () => {
-        let address: Address = new Charcter(0).forwardFromPosition(0);
+        let address: Address = new Character(0).forwardFromPosition(0);
         describe("on empty string", () => {
             let document = new Document("", []);
             let start = 0; let end = 0;
@@ -45,7 +45,7 @@ describe(Charcter.name, () => {
         });
     });
     describe("#1", () => {
-        let address = new Charcter(1).forwardFromPosition(0);
+        let address = new Character(1).forwardFromPosition(0);
         describe("on empty string", () => {
             let document = new Document("", []);
             let start = 0; let end = 0;

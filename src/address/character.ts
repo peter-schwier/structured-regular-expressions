@@ -2,7 +2,7 @@ import { Document } from "../models/document";
 import { Range } from "../models/range";
 import { Address, ForwardAddress, BackwardAddress } from "./address";
 
-export class Charcter implements ForwardAddress, BackwardAddress {
+export class Character implements ForwardAddress, BackwardAddress {
     constructor(private readonly character: number) {
         if (character < 0) {
             throw new RangeError(`Cannot have a character number less than 0: ${character}`);
