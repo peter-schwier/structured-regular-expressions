@@ -60,8 +60,8 @@ class BackwardLine implements Address {
             lines.shift();
         }
         if (lines.length > 0) {
-            // add the zero line from the start of the next line to the fromPosition
-            lines.unshift(new Range(lines[0].start, this.fromPosition));
+            // add the zero line from the end of the next line to the fromPosition
+            lines.unshift(new Range(lines[0].end, this.fromPosition));
         } else {
             // add the zero line from the start of the document to fromPosition
             lines.unshift(new Range(0, this.fromPosition));
