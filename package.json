@@ -5,6 +5,9 @@
     "version": "0.0.1",
     "publisher": "peterschwier",
     "main": "./out/main",
+    "pre-commit": [
+        "test"
+    ],
     "scripts": {
         "parser": "pegjs -o ./out/parser/parser.js ./src/parser/parser.pegjs",
         "tsc": "tsc -p ./",
@@ -21,6 +24,7 @@
         "mocha": "^5.1.1",
         "onchange": "^3.3.0",
         "pegjs": "^0.10.0",
+        "pre-commit": "^1.2.2",
         "ts-node": "^6.0.0",
         "tslint": "^5.8.0",
         "typescript": "^2.8.3"
