@@ -7,6 +7,6 @@ export class Backward implements Address {
 
     getRange(document: Document): Range {
         let startRange = this.start.getRange(document);
-        return this.next.backward(startRange.start).getRange(document);
+        return this.next.backwardFromPosition(startRange.start).getRange(document);
     }
 }

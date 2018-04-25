@@ -7,7 +7,7 @@ import { Address } from './address';
 
 describe(Forward.name, () => {
     describe("0+0", () => {
-        let address : Address = new Forward(new Line(0).forward(0), new Line(0));
+        let address : Address = new Forward(new Line(0).forwardFromPosition(0), new Line(0));
         describe("on empty string", () => {
             let document = new Document("", []);
             let start = 0; let end = 0;
@@ -47,7 +47,7 @@ describe(Forward.name, () => {
     });
     
     describe("0+1", () => {
-        let address = new Forward(new Line(0).forward(0), new Line(1));
+        let address = new Forward(new Line(0).forwardFromPosition(0), new Line(1));
         describe("on empty string", () => {
             let document = new Document("", []);
             let start = 0; let end = 0;
@@ -87,7 +87,7 @@ describe(Forward.name, () => {
     });
     
     describe("1+0", () => {
-        let address = new Forward(new Line(1).forward(0), new Line(0));
+        let address = new Forward(new Line(1).forwardFromPosition(0), new Line(0));
         describe("on empty string", () => {
             let document = new Document("", []);
             let start = 0; let end = 0;
@@ -127,7 +127,7 @@ describe(Forward.name, () => {
     });
 
     describe("1+1", () => {
-        let address = new Forward(new Line(1).forward(0), new Line(1));
+        let address = new Forward(new Line(1).forwardFromPosition(0), new Line(1));
         describe("on empty string", () => {
             let document = new Document("", []);
             let start = 0; let end = 0;
@@ -167,7 +167,7 @@ describe(Forward.name, () => {
     });
 
     describe("0+2", () => {
-        let address = new Forward(new Line(1).forward(0), new Line(1));
+        let address = new Forward(new Line(1).forwardFromPosition(0), new Line(1));
         describe("on empty string", () => {
             let document = new Document("", []);
             let start = 0; let end = 0;

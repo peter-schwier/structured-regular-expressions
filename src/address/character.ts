@@ -8,10 +8,10 @@ export class Charcter implements ForwardAddress, BackwardAddress {
             throw new RangeError(`Cannot have a character number less than 0: ${character}`);
         }
     }
-    forward(fromPosition: number): Address {
+    forwardFromPosition(fromPosition: number): Address {
         return new ForwardCharacter(this.character, fromPosition);
     }
-    backward(fromPosition: number): Address {
+    backwardFromPosition(fromPosition: number): Address {
         return new BackwardLine(this.character, fromPosition);
     }
 }

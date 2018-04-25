@@ -8,10 +8,10 @@ export class Line implements ForwardAddress, BackwardAddress {
             throw new RangeError(`Cannot have a line number less than 0: ${line}`);
         }
     }
-    forward(fromPosition: number): Address {
+    forwardFromPosition(fromPosition: number): Address {
         return new ForwardLine(this.line, fromPosition);
     }
-    backward(fromPosition:number) : Address{
+    backwardFromPosition(fromPosition:number) : Address{
         return new BackwardLine(this.line, fromPosition);
     }
 }

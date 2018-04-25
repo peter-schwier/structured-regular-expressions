@@ -7,6 +7,6 @@ export class Forward implements Address {
 
     getRange(document: Document): Range {
         let startRange = this.start.getRange(document);
-        return this.next.forward(startRange.end).getRange(document);
+        return this.next.forwardFromPosition(startRange.end).getRange(document);
     }
 }
