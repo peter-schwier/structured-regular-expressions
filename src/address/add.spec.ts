@@ -5,20 +5,6 @@ import { Add } from './add';
 import { Line } from './line';
 
 describe(Add.name, () => {
-    describe("getRangeForward function", () => {
-        let address = new Add(new Line(0), new Line(0));
-        it('exists', () => {
-            expect(address)
-                .has.property("getRangeForward")
-                .that.is.a("function");
-        });
-        it('takes two arguments', () => {
-            expect(address)
-                .has.property("getRangeForward")
-                .has.property("length")
-                .that.equals(2);
-        });
-    });
     describe("0+0", () => {
         let address = new Add(new Line(0), new Line(0));
         describe("on empty string", () => {
