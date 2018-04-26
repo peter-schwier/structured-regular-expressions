@@ -1,16 +1,16 @@
 import 'mocha';
 import { expect } from "chai";
 import { Document } from '../../document';
-import { Loop, Print, Conditional, Command } from '../../commands';
+import { Loop, Print, Conditional, Command, TempAddressCommand } from '../../commands';
 import { Span } from '../../addresses';
 
 describe(Loop.name, () => {
     describe(",x/[&\\n]+/p", () => {
-        let command: Command = new Loop(new Span(), "[^\\n]+", new Print());
+        let commands: Command[] = [new TempAddressCommand(new Span()), new Loop("[^\\n]+", new Print())];
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {
-                let changed = command.apply(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -24,7 +24,7 @@ describe(Loop.name, () => {
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf");
             it("prints 'asdf','fdsa','adsf'", () => {
-                let changed = command.apply(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -43,11 +43,11 @@ describe(Loop.name, () => {
         });
     });
     describe(",x/[&\\n]+/g/df/p", () => {
-        let command: Command = new Loop(new Span(), "[^\\n]+", new Conditional("df", new Print()));
+        let commands: Command[] = [new TempAddressCommand(new Span()), new Loop("[^\\n]+", new Conditional("df", new Print()))];
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {
-                let changed = command.apply(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -61,7 +61,7 @@ describe(Loop.name, () => {
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf");
             it("prints 'asdf','adsf'", () => {
-                let changed = command.apply(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -77,11 +77,11 @@ describe(Loop.name, () => {
         });
     });
     describe(",xp", () => {
-        let command: Command = new Loop(new Span(), undefined, new Print());
+        let commands: Command[] = [new TempAddressCommand(new Span()), new Loop(undefined, new Print())];
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {
-                let changed = command.apply(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -95,7 +95,7 @@ describe(Loop.name, () => {
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf");
             it("prints 'asdf\\n','fsda\\n','adsf'", () => {
-                let changed = command.apply(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
