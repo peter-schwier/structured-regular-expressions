@@ -19,7 +19,9 @@ export class Conditional {
 
     exec(document: Document): Document {
         let range = this.address.getRange(document);
-        if (!this.regex.test(document.getText(range))) {
+        let text = document.getText(range);
+        let contains = this.regex.test(text);
+        if (!contains) {
             return document;
         } else {
             let temp = new Document(document.text, [range], document.changes);

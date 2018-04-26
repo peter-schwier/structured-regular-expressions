@@ -36,34 +36,28 @@ describe(Print.name, () => {
             });
         });
     });
-    describe("2p", () => {
-        let command: Print = new Print(new Line(2).forwardFromPosition(0));
+    describe("2g/fd/p", () => {
+        let command: Conditional = new Conditional(new Line(2).forwardFromPosition(0), "fd", new Print(new Dot()));
         describe("on empty string", () => {
             let document = new Document("", [], []);
-            it("prints ''", () => {
+            it("does not print", () => {
                 let changed = command.exec(document);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
                     .that.has.property("length")
-                    .that.equals(1);
-                expect(changed.changes[0])
-                    .has.property("text")
-                    .that.equals("");
+                    .that.equals(0);
             });
         });
         describe("on one line string", () => {
             let document = new Document("asdf", [], []);
-            it("prints ''", () => {
+            it("does not print", () => {
                 let changed = command.exec(document);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
                     .that.has.property("length")
-                    .that.equals(1);
-                expect(changed.changes[0])
-                    .has.property("text")
-                    .that.equals("");
+                    .that.equals(0);
             });
         });
         describe("on multi line string", () => {
