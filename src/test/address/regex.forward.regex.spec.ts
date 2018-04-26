@@ -4,9 +4,9 @@ import {Document} from '../../document';
 import { Address, Forward, Regex } from '../../addresses';
 
 describe("/df/+/as/", () => {
-    let address: Address = new Forward(new Regex("df").forwardFromPosition(0), new Regex("as"));
+    let address: Address = new Forward(new Regex("df"), new Regex("as"));
     describe("on multi line string", () => {
-        let document = new Document("asdf\nfdsa\nasdf", [], []);
+        let document = new Document("asdf\nfdsa\nasdf");
         let start = 10; let end = 12;
         it(`starts at ${start}`, () => {
             let range = address.getRange(document);

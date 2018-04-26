@@ -8,7 +8,7 @@ describe(Dot.name, () => {
     let address: Address = new Dot();
 
     describe("on empty string", () => {
-        let document = new Document("", [], []);
+        let document = new Document("");
         let start = 0; let end = 0;
         it(`starts at ${start}`, () => {
             let range = address.getRange(document);

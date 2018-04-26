@@ -14,7 +14,7 @@ export interface BackwardAddress {
 }
 
 export class Backward implements Address {
-    constructor(public readonly start: Address, public readonly next: BackwardAddress) { }
+    constructor(public readonly start: Address = new Dot(), public readonly next: BackwardAddress) { }
 
     getRange(document: Document): Range {
         let startRange = this.start.getRange(document);
@@ -22,11 +22,14 @@ export class Backward implements Address {
     }
 }
 
-export class Character implements ForwardAddress, BackwardAddress {
+export class Character implements Address, ForwardAddress, BackwardAddress {
     constructor(private readonly character: number) {
         if (character < 0) {
             throw new RangeError(`Cannot have a character number less than 0: ${character}`);
         }
+    }
+    getRange(document: Document): Range {
+        return this.forwardFromPosition(0).getRange(document);
     }
     forwardFromPosition(fromPosition: number): Address {
         return new ForwardCharacter(this.character, fromPosition);
@@ -81,7 +84,7 @@ export class End implements Address {
 }
 
 export class Forward implements Address {
-    constructor(public readonly start: Address, public readonly next: ForwardAddress) { }
+    constructor(public readonly start: Address = new Dot(), public readonly next: ForwardAddress) { }
 
     getRange(document: Document): Range {
         let startRange = this.start.getRange(document);
@@ -158,8 +161,11 @@ class BackwardLine implements Address {
     }
 }
 
-export class Regex implements ForwardAddress, BackwardAddress {
+export class Regex implements Address, ForwardAddress, BackwardAddress {
     constructor(private readonly regex: string) { }
+    getRange(document: Document): Range {
+        return this.forwardFromPosition(0).getRange(document);
+    }
     forwardFromPosition(fromPosition: number): Address {
         return new ForwardRegex(this.regex, fromPosition);
     }
@@ -215,7 +221,7 @@ class BackwardRegex implements Address {
 }
 
 export class Span implements Address {
-    constructor(public readonly start: Address, public readonly end: Address) { }
+    constructor(public readonly start: Address = new Line(0), public readonly end: Address = new End()) { }
 
     getRange(document: Document): Range {
         let startRange = this.start.getRange(document);

@@ -4,8 +4,8 @@ import { Print } from "./changes/print";
 export class Document {
     constructor(
         public readonly text: string,
-        public readonly selections: Range[],
-        public readonly changes: Print[]
+        public readonly selections: Range[] = [],
+        public readonly changes: Print[] = []
     ) { }
 
     lines(): Range[] {

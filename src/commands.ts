@@ -1,4 +1,4 @@
-import { Address } from "./addresses";
+import { Address, Dot } from "./addresses";
 import { Document } from "./document";
 import { Range } from "./range";
 
@@ -7,7 +7,7 @@ export interface Command {
 }
 
 export class Print implements Command {
-    constructor(private readonly address: Address) { }
+    constructor(private readonly address: Address = new Dot()) { }
 
     exec(document: Document): Document {
         let range = this.address.getRange(document);
@@ -17,7 +17,7 @@ export class Print implements Command {
 
 export class Conditional implements Command {
     private readonly regex: RegExp;
-    constructor(private readonly address: Address, regex: string, private readonly next: Command) {
+    constructor(private readonly address: Address = new Dot(), regex: string, private readonly next: Command) {
         const caseInsensitive = regex.toLowerCase() === regex ? "i" : "";
         this.regex = new RegExp(regex, caseInsensitive);
     }
@@ -37,7 +37,7 @@ export class Conditional implements Command {
 
 export class Loop implements Command {
     private readonly regex: RegExp;
-    constructor(private readonly address: Address, regex: string, private readonly next: Command) {
+    constructor(private readonly address: Address = new Dot(), regex: string = ".*\\n?", private readonly next: Command) {
         const caseInsensitive = regex.toLowerCase() === regex ? "i" : "";
         this.regex = new RegExp(regex, "g" + caseInsensitive);
     }
