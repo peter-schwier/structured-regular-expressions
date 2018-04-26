@@ -1,11 +1,11 @@
 import { Range } from "./range";
-import { Print } from "./changes";
+import { Print, Change, Insert } from "./changes";
 
 export class Document {
     constructor(
         public readonly text: string,
         public readonly selections: Range[] = [],
-        public readonly changes: Print[] = []
+        public readonly changes: Change[] = []
     ) { }
 
     lines(): Range[] {
@@ -38,7 +38,12 @@ export class Document {
 
     print(range: Range): Document {
         let text = this.getText(range);
-        let print = new Print(text);
-        return new Document(this.text, this.selections, this.changes.concat(print));
+        let change = new Print(text);
+        return new Document(this.text, this.selections, this.changes.concat(change));
+    }
+
+    insert(position: number, text: string): Document {
+        let change = new Insert(position, text);
+        return new Document(this.text, this.selections, this.changes.concat(change));
     }
 }

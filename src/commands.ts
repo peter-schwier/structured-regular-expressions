@@ -15,6 +15,24 @@ export class Print implements Command {
     }
 }
 
+export class Insert implements Command {
+    constructor(private readonly address: Address = new Dot(), private readonly text: string) { }
+
+    exec(document: Document): Document {
+        let range = this.address.getRange(document);
+        return document.insert(range.start, this.text);
+    }
+}
+
+export class Append implements Command {
+    constructor(private readonly address: Address = new Dot(), private readonly text: string) { }
+
+    exec(document: Document): Document {
+        let range = this.address.getRange(document);
+        return document.insert(range.end, this.text);
+    }
+}
+
 export class Conditional implements Command {
     private readonly regex: RegExp;
     constructor(private readonly address: Address = new Dot(), regex: string, private readonly next: Command) {
