@@ -6,11 +6,11 @@ import { Insert as InsertChange } from '../../changes';
 
 describe(Insert.name, () => {
     describe("i/asdf/", () => {
-        let command: Command = new Insert(undefined, "asdf");
+        let commands: Command[] = [new Insert("asdf")];
         describe("on empty string", () => {
             let document = new Document("");
             it("inserts 'asdf' at #0", () => {
-                let changed = command.exec(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -25,7 +25,7 @@ describe(Insert.name, () => {
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("inserts 'asdf' at #0", () => {
-                let changed = command.exec(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -40,7 +40,7 @@ describe(Insert.name, () => {
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf");
             it("inserts 'asdf' at #0", () => {
-                let changed = command.exec(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")

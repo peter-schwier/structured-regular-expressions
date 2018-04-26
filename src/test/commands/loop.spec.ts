@@ -10,7 +10,7 @@ describe(Loop.name, () => {
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {
-                let changed = command.exec(document);
+                let changed = command.apply(document);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -24,7 +24,7 @@ describe(Loop.name, () => {
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf");
             it("prints 'asdf','fdsa','adsf'", () => {
-                let changed = command.exec(document);
+                let changed = command.apply(document);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -47,7 +47,7 @@ describe(Loop.name, () => {
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {
-                let changed = command.exec(document);
+                let changed = command.apply(document);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -61,7 +61,7 @@ describe(Loop.name, () => {
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf");
             it("prints 'asdf','adsf'", () => {
-                let changed = command.exec(document);
+                let changed = command.apply(document);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -81,7 +81,7 @@ describe(Loop.name, () => {
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {
-                let changed = command.exec(document);
+                let changed = command.apply(document);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -95,7 +95,7 @@ describe(Loop.name, () => {
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf");
             it("prints 'asdf\\n','fsda\\n','adsf'", () => {
-                let changed = command.exec(document);
+                let changed = command.apply(document);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")

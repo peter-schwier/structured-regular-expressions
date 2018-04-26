@@ -3,33 +3,43 @@ import { Document } from "./document";
 import { Range } from "./range";
 
 export interface Command {
-    exec(document: Document): Document;
+    apply(document: Document): Document;
+}
+
+export class TempAddressCommand implements Command {
+    constructor(private readonly address: Address) { }
+
+    apply(document: Document): Document {
+        let range = this.address.getRange(document);
+        return new Document(document.text, [range], document.changes);
+    }
 }
 
 export class Print implements Command {
-    constructor(private readonly address: Address = new Dot()) { }
-
-    exec(document: Document): Document {
-        let range = this.address.getRange(document);
-        return document.print(range);
+    apply(document: Document): Document {
+        return document.forEachSelection(
+            (document, selection) =>
+                document.print(selection));
     }
 }
 
 export class Insert implements Command {
-    constructor(private readonly address: Address = new Dot(), private readonly text: string) { }
+    constructor(private readonly text: string) { }
 
-    exec(document: Document): Document {
-        let range = this.address.getRange(document);
-        return document.insert(range.start, this.text);
+    apply(document: Document): Document {
+        return document.forEachSelection(
+            (document, selection) =>
+                document.insert(selection.start, this.text));
     }
 }
 
 export class Append implements Command {
-    constructor(private readonly address: Address = new Dot(), private readonly text: string) { }
+    constructor(private readonly text: string) { }
 
-    exec(document: Document): Document {
-        let range = this.address.getRange(document);
-        return document.insert(range.end, this.text);
+    apply(document: Document): Document {
+        return document.forEachSelection(
+            (document, selection) =>
+                document.insert(selection.end, this.text));
     }
 }
 
@@ -40,7 +50,7 @@ export class Conditional implements Command {
         this.regex = new RegExp(regex, caseInsensitive);
     }
 
-    exec(document: Document): Document {
+    apply(document: Document): Document {
         let range = this.address.getRange(document);
         let text = document.getText(range);
         let contains = this.regex.test(text);
@@ -48,7 +58,7 @@ export class Conditional implements Command {
             return document;
         } else {
             let temp = new Document(document.text, [range], document.changes);
-            return this.next.exec(temp);
+            return this.next.apply(temp);
         }
     }
 }
@@ -60,7 +70,7 @@ export class Loop implements Command {
         this.regex = new RegExp(regex, "g" + caseInsensitive);
     }
 
-    exec(document: Document): Document {
+    apply(document: Document): Document {
         let range = this.address.getRange(document);
         let text = document.text.substring(0, range.end);
 
@@ -82,7 +92,7 @@ export class Loop implements Command {
                 [new Range(result.index, this.regex.lastIndex)],
                 document.changes);
             // Run the next command and capture the dot and changes
-            document = this.next.exec(document);
+            document = this.next.apply(document);
             // Save the dot to the ranges array
             ranges = ranges.concat(...document.selections);
 

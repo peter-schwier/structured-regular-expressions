@@ -10,7 +10,7 @@ describe(Print.name, () => {
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {
-                let changed = command.exec(document);
+                let changed = command.apply(document);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -24,7 +24,7 @@ describe(Print.name, () => {
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf");
             it("prints 'asdf\\n'", () => {
-                let changed = command.exec(document);
+                let changed = command.apply(document);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -41,7 +41,7 @@ describe(Print.name, () => {
         describe("on empty string", () => {
             let document = new Document("");
             it("does not print", () => {
-                let changed = command.exec(document);
+                let changed = command.apply(document);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -52,7 +52,7 @@ describe(Print.name, () => {
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("does not print", () => {
-                let changed = command.exec(document);
+                let changed = command.apply(document);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -63,7 +63,7 @@ describe(Print.name, () => {
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf");
             it("prints 'fdsa\\n'", () => {
-                let changed = command.exec(document);
+                let changed = command.apply(document);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")

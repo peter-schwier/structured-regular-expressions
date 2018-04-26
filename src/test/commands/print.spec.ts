@@ -1,16 +1,16 @@
 import 'mocha';
 import { expect } from "chai";
 import {Document} from '../../document';
-import { Print, Command } from '../../commands';
+import { Print, Command, TempAddressCommand } from '../../commands';
 import { Line, Span } from '../../addresses';
 
 describe(Print.name, () => {
     describe("1p", () => {
-        let command: Command = new Print(new Line(1));
+        let commands: Command[] = [new TempAddressCommand(new Line(1)), new Print()];
         describe("on empty string", () => {
             let document = new Document("");
             it("prints ''", () => {
-                let changed = command.exec(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -24,7 +24,7 @@ describe(Print.name, () => {
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {
-                let changed = command.exec(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -38,7 +38,7 @@ describe(Print.name, () => {
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf");
             it("prints 'asdf\\n'", () => {
-                let changed = command.exec(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -51,11 +51,11 @@ describe(Print.name, () => {
         });
     });
     describe("2p", () => {
-        let command: Command = new Print(new Line(2));
+        let commands: Command[] = [new TempAddressCommand(new Line(2)), new Print()];
         describe("on empty string", () => {
             let document = new Document("");
             it("prints ''", () => {
-                let changed = command.exec(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -69,7 +69,7 @@ describe(Print.name, () => {
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints ''", () => {
-                let changed = command.exec(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -83,7 +83,7 @@ describe(Print.name, () => {
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf");
             it("prints 'fdsa\\n'", () => {
-                let changed = command.exec(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -96,11 +96,11 @@ describe(Print.name, () => {
         });
     });
     describe(",p", () => {
-        let command: Command = new Print(new Span());
+        let commands: Command[] = [new TempAddressCommand(new Span()), new Print()];
         describe("on empty string", () => {
             let document = new Document("");
             it("prints ''", () => {
-                let changed = command.exec(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -114,7 +114,7 @@ describe(Print.name, () => {
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {
-                let changed = command.exec(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -128,7 +128,7 @@ describe(Print.name, () => {
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf");
             it("prints 'asdf\\nfdsa\\nasdf'", () => {
-                let changed = command.exec(document);
+                let changed = document.apply(...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")

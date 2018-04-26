@@ -1,10 +1,11 @@
 import { Range } from "./range";
 import { Print, Change, Insert } from "./changes";
+import { Command } from "./commands";
 
 export class Document {
     constructor(
         public readonly text: string,
-        public readonly selections: Range[] = [],
+        public readonly selections: Range[] = [new Range(0, 0)],
         public readonly changes: Change[] = []
     ) { }
 
@@ -45,5 +46,21 @@ export class Document {
     insert(position: number, text: string): Document {
         let change = new Insert(position, text);
         return new Document(this.text, this.selections, this.changes.concat(change));
+    }
+
+    apply(...commands: Command[]): Document {
+        let document: Document = this;
+        commands.forEach((command) => {
+            document = command.apply(document);
+        });
+        return document;
+    }
+
+    forEachSelection(handler: (document: Document, selection: Range) => Document): Document {
+        let document: Document = this;
+        this.selections.forEach((selection) => {
+            document = handler(document, selection);
+        });
+        return document;
     }
 }
