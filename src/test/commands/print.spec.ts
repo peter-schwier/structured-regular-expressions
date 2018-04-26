@@ -1,8 +1,8 @@
 import 'mocha';
 import { expect } from "chai";
-import { Print } from '../../src/commands/print';
-import { Line } from '../../src/address/line';
-import { Document } from '../../src/models/document';
+import {Document} from '../../document';
+import { Print } from '../../commands';
+import { Line } from '../../addresses';
 
 describe(Print.name, () => {
     describe("1p", () => {

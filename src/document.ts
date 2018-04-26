@@ -1,5 +1,5 @@
 import { Range } from "./range";
-import { Print } from "./print";
+import { Print } from "./changes/print";
 
 export class Document {
     constructor(
@@ -32,8 +32,12 @@ export class Document {
         return ranges;
     }
 
+    getText(range: Range): string {
+        return this.text.substring(range.start, range.end);
+    }
+
     print(range: Range): Document {
-        let text = this.text.substring(range.start, range.end);
+        let text = this.getText(range);
         let print = new Print(text);
         return new Document(this.text, this.selections, this.changes.concat(print));
     }

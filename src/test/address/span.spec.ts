@@ -1,9 +1,7 @@
 import 'mocha';
 import { expect } from "chai";
-import { Address } from '../../src/address/address';
-import { Span } from '../../src/address/span';
-import { Character } from '../../src/address/character';
-import { Document } from '../../src/models/document';
+import { Document } from '../../document';
+import { Span, Address, Character } from '../../addresses';
 
 describe(Span.name, () => {
     describe("#1+#2", () => {

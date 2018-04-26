@@ -1,9 +1,7 @@
 import 'mocha';
 import { expect } from "chai";
-import { Address } from '../../src/address/address';
-import { Forward } from '../../src/address/forward';
-import { Line } from '../../src/address/line';
-import { Document } from '../../src/models/document';
+import {Document} from '../../document';
+import { Forward, Address, Line } from '../../addresses';
 
 describe(Forward.name, () => {
     describe("0+0", () => {

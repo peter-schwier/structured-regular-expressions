@@ -1,12 +1,11 @@
 import 'mocha';
 import { expect } from "chai";
-import { Line } from '../../src/address/line';
-import { Address } from '../../src/address/address';
-import { Document } from '../../src/models/document';
+import {Document} from '../../document';
+import { Character, Address } from '../../addresses';
 
-describe(Line.name, () => {
-    describe("0", () => {
-        let address: Address = new Line(0).forwardFromPosition(0);
+describe(Character.name, () => {
+    describe("#0", () => {
+        let address: Address = new Character(0).forwardFromPosition(0);
         describe("on empty string", () => {
             let document = new Document("", [], []);
             let start = 0; let end = 0;
@@ -44,8 +43,8 @@ describe(Line.name, () => {
             });
         });
     });
-    describe("1", () => {
-        let address = new Line(1).forwardFromPosition(0);
+    describe("#1", () => {
+        let address = new Character(1).forwardFromPosition(0);
         describe("on empty string", () => {
             let document = new Document("", [], []);
             let start = 0; let end = 0;
@@ -60,7 +59,7 @@ describe(Line.name, () => {
         });
         describe("on one line string", () => {
             let document = new Document("asdf", [], []);
-            let start = 0; let end = 4;
+            let start = 1; let end = 1;
             it(`starts at ${start}`, () => {
                 let range = address.getRange(document);
                 expect(range).has.property("start").that.equals(start);
@@ -72,7 +71,7 @@ describe(Line.name, () => {
         });
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf", [], []);
-            let start = 0; let end = 5;
+            let start = 1; let end = 1;
             it(`starts at ${start}`, () => {
                 let range = address.getRange(document);
                 expect(range).has.property("start").that.equals(start);
