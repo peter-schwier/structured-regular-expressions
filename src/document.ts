@@ -1,5 +1,5 @@
 import { Range } from "./range";
-import { Print } from "./changes/print";
+import { Print } from "./changes";
 
 export class Document {
     constructor(
