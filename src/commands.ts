@@ -45,21 +45,22 @@ export class Append implements Command {
 
 export class Conditional implements Command {
     private readonly regex: RegExp;
-    constructor(private readonly address: Address = new Dot(), regex: string, private readonly next: Command) {
+    constructor(regex: string, private readonly next: Command) {
         const caseInsensitive = regex.toLowerCase() === regex ? "i" : "";
         this.regex = new RegExp(regex, caseInsensitive);
     }
 
     apply(document: Document): Document {
-        let range = this.address.getRange(document);
-        let text = document.getText(range);
-        let contains = this.regex.test(text);
-        if (!contains) {
-            return document;
-        } else {
-            let temp = new Document(document.text, [range], document.changes);
-            return this.next.apply(temp);
-        }
+        let selections: Range[] = [];
+        document.selections.forEach((selection) => {
+            let text = document.getText(selection);
+            let contains = this.regex.test(text);
+            if (contains) {
+                selections.push(selection);
+            }
+        });
+        document = new Document(document.text, selections, document.changes);
+        return document.apply(this.next);
     }
 }
 

@@ -43,7 +43,7 @@ describe(Loop.name, () => {
         });
     });
     describe(",x/[&\\n]+/g/df/p", () => {
-        let command: Command = new Loop(new Span(), "[^\\n]+", new Conditional(undefined, "df", new Print()));
+        let command: Command = new Loop(new Span(), "[^\\n]+", new Conditional("df", new Print()));
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {
