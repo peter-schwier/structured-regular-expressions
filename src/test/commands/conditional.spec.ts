@@ -1,12 +1,12 @@
 import 'mocha';
 import { expect } from "chai";
 import { Document } from '../../document';
-import { Print, Conditional } from '../../commands';
+import { Print, Conditional, Command } from '../../commands';
 import { Line, Dot } from '../../addresses';
 
 describe(Print.name, () => {
     describe("1g/df/p", () => {
-        let command: Conditional = new Conditional(new Line(1).forwardFromPosition(0), "df", new Print(new Dot()));
+        let command: Command = new Conditional(new Line(1).forwardFromPosition(0), "df", new Print(new Dot()));
         describe("on one line string", () => {
             let document = new Document("asdf", [], []);
             it("prints 'asdf'", () => {
@@ -37,7 +37,7 @@ describe(Print.name, () => {
         });
     });
     describe("2g/fd/p", () => {
-        let command: Conditional = new Conditional(new Line(2).forwardFromPosition(0), "fd", new Print(new Dot()));
+        let command: Command = new Conditional(new Line(2).forwardFromPosition(0), "fd", new Print(new Dot()));
         describe("on empty string", () => {
             let document = new Document("", [], []);
             it("does not print", () => {

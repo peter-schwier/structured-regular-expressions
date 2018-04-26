@@ -89,16 +89,19 @@ export class Forward implements Address {
     }
 }
 
-export class Line implements ForwardAddress, BackwardAddress {
+export class Line implements Address, ForwardAddress, BackwardAddress {
     constructor(private readonly line: number) {
         if (line < 0) {
             throw new RangeError(`Cannot have a line number less than 0: ${line}`);
         }
     }
+    getRange(document: Document): Range {
+        return this.forwardFromPosition(0).getRange(document);
+    }
     forwardFromPosition(fromPosition: number): Address {
         return new ForwardLine(this.line, fromPosition);
     }
-    backwardFromPosition(fromPosition:number) : Address{
+    backwardFromPosition(fromPosition: number): Address {
         return new BackwardLine(this.line, fromPosition);
     }
 }
@@ -166,11 +169,11 @@ export class Regex implements ForwardAddress, BackwardAddress {
 }
 
 class ForwardRegex implements Address {
-    private readonly regex : RegExp;
+    private readonly regex: RegExp;
     constructor(regex: string, private readonly fromPosition: number) {
         const caseInsensitive = regex.toLowerCase() === regex ? "i" : "";
         this.regex = new RegExp(regex, "g" + caseInsensitive);
-     }
+    }
 
     getRange(document: Document): Range {
         this.regex.lastIndex = this.fromPosition;
@@ -186,11 +189,11 @@ class ForwardRegex implements Address {
 }
 
 class BackwardRegex implements Address {
-    private readonly regex : RegExp;
+    private readonly regex: RegExp;
     constructor(regex: string, private readonly fromPosition: number) {
         const caseInsensitive = regex.toLowerCase() === regex ? "i" : "";
         this.regex = new RegExp(regex, "g" + caseInsensitive);
-     }
+    }
 
     getRange(document: Document): Range {
         // Start from the begining of the document
