@@ -32,7 +32,7 @@ export class Append implements Command {
 
 export class Conditional implements Command {
     private readonly regex: RegExp;
-    constructor(regex: string, private readonly next?: Command) {
+    constructor(regex: string) {
         const caseInsensitive = regex.toLowerCase() === regex ? "i" : "";
         this.regex = new RegExp(regex, caseInsensitive);
     }
@@ -46,18 +46,13 @@ export class Conditional implements Command {
                 selections.push(selection);
             }
         });
-        document = new Document(document.text, selections, document.changes);
-        if (this.next) {
-            return document.apply(this.next);
-        } else {
-            return document;
-        }
+        return new Document(document.text, selections, document.changes);
     }
 }
 
 export class Loop implements Command {
     private readonly regex: RegExp;
-    constructor(regex: string = ".*\\n?", private readonly next: Command) {
+    constructor(regex: string = ".*\\n?") {
         const caseInsensitive = regex.toLowerCase() === regex ? "i" : "";
         this.regex = new RegExp(regex, "g" + caseInsensitive);
     }
@@ -86,11 +81,6 @@ export class Loop implements Command {
                 }
             }
         });
-        document = new Document(document.text, selections, document.changes);
-        if (this.next) {
-            return document.apply(this.next);
-        } else {
-            return document;
-        }
+        return new Document(document.text, selections, document.changes);
     }
 }

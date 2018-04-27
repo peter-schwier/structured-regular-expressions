@@ -7,7 +7,7 @@ import { Command } from '../../command';
 
 describe(Print.name, () => {
     describe("1g/df/p", () => {
-        let commands: Command[] = [new Line(1), new Conditional("df", new Print())];
+        let commands: Command[] = [new Line(1), new Conditional("df"), new Print()];
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {
@@ -38,7 +38,7 @@ describe(Print.name, () => {
         });
     });
     describe("2g/fd/p", () => {
-        let commands: Command[] = [new Line(2), new Conditional("fd", new Print())];
+        let commands: Command[] = [new Line(2), new Conditional("fd"), new Print()];
         describe("on empty string", () => {
             let document = new Document("");
             it("does not print", () => {
