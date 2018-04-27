@@ -1,7 +1,8 @@
 import 'mocha';
 import { expect } from "chai";
-import {Document} from '../../document';
-import { Character, Address } from '../../addresses';
+import { Document } from '../../document';
+import { Character } from '../../addresses';
+import { Address } from '../../address';
 
 describe(Character.name, () => {
     describe("#0", () => {

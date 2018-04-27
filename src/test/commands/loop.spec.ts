@@ -1,12 +1,13 @@
 import 'mocha';
 import { expect } from "chai";
 import { Document } from '../../document';
-import { Loop, Print, Conditional, Command, TempAddressCommand } from '../../commands';
+import { Loop, Print, Conditional } from '../../commands';
 import { Span } from '../../addresses';
+import { Command } from '../../command';
 
 describe(Loop.name, () => {
     describe(",x/[&\\n]+/p", () => {
-        let commands: Command[] = [new TempAddressCommand(new Span()), new Loop("[^\\n]+", new Print())];
+        let commands: Command[] = [new Span(), new Loop("[^\\n]+", new Print())];
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {
@@ -43,7 +44,7 @@ describe(Loop.name, () => {
         });
     });
     describe(",x/[&\\n]+/g/df/p", () => {
-        let commands: Command[] = [new TempAddressCommand(new Span()), new Loop("[^\\n]+", new Conditional("df", new Print()))];
+        let commands: Command[] = [new Span(), new Loop("[^\\n]+", new Conditional("df", new Print()))];
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {
@@ -77,7 +78,7 @@ describe(Loop.name, () => {
         });
     });
     describe(",xp", () => {
-        let commands: Command[] = [new TempAddressCommand(new Span()), new Loop(undefined, new Print())];
+        let commands: Command[] = [new Span(), new Loop(undefined, new Print())];
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("prints 'asdf'", () => {

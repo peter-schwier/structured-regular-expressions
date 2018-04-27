@@ -1,12 +1,13 @@
 import 'mocha';
 import { expect } from "chai";
-import {Document} from '../../document';
-import { Print, Command, TempAddressCommand } from '../../commands';
+import { Document } from '../../document';
+import { Print } from '../../commands';
 import { Line, Span } from '../../addresses';
+import { Command } from '../../command';
 
 describe(Print.name, () => {
     describe("1p", () => {
-        let commands: Command[] = [new TempAddressCommand(new Line(1)), new Print()];
+        let commands: Command[] = [new Line(1), new Print()];
         describe("on empty string", () => {
             let document = new Document("");
             it("prints ''", () => {
@@ -51,7 +52,7 @@ describe(Print.name, () => {
         });
     });
     describe("2p", () => {
-        let commands: Command[] = [new TempAddressCommand(new Line(2)), new Print()];
+        let commands: Command[] = [new Line(2), new Print()];
         describe("on empty string", () => {
             let document = new Document("");
             it("prints ''", () => {
@@ -96,7 +97,7 @@ describe(Print.name, () => {
         });
     });
     describe(",p", () => {
-        let commands: Command[] = [new TempAddressCommand(new Span()), new Print()];
+        let commands: Command[] = [new Span(), new Print()];
         describe("on empty string", () => {
             let document = new Document("");
             it("prints ''", () => {

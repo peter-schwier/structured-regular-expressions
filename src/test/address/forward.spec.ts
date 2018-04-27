@@ -1,7 +1,8 @@
 import 'mocha';
 import { expect } from "chai";
-import {Document} from '../../document';
-import { Forward, Address, Line } from '../../addresses';
+import { Document } from '../../document';
+import { Forward, Line } from '../../addresses';
+import { Address } from '../../address';
 
 describe(Forward.name, () => {
     describe("0+0", () => {

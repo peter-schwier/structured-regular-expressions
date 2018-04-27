@@ -1,7 +1,8 @@
 import 'mocha';
 import { expect } from "chai";
-import {Document} from '../../document';
-import { Address, Backward, Regex } from '../../addresses';
+import { Document } from '../../document';
+import { Backward, Regex } from '../../addresses';
+import { Address } from '../../address';
 
 describe("/sa/-/as/", () => {
     let address: Address = new Backward(new Regex("sa"), new Regex("as"));

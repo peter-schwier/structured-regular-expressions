@@ -1,7 +1,8 @@
 import 'mocha';
 import { expect } from "chai";
-import {Document} from '../../document';
-import { Address, Forward, Regex } from '../../addresses';
+import { Document } from '../../document';
+import { Forward, Regex } from '../../addresses';
+import { Address } from '../../address';
 
 describe("/df/+/as/", () => {
     let address: Address = new Forward(new Regex("df"), new Regex("as"));

@@ -1,7 +1,8 @@
 import 'mocha';
 import { expect } from "chai";
 import { Document } from '../../document';
-import { Regex, Address } from '../../addresses';
+import { Regex } from '../../addresses';
+import { Address } from '../../address';
 
 describe(Regex.name, () => {
     describe("/sd/", () => {

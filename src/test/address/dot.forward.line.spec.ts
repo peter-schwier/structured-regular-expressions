@@ -1,8 +1,9 @@
 import 'mocha';
 import { expect } from "chai";
-import {Document} from '../../document';
-import {Range} from '../../range';
-import { Line, Dot, Forward, Address } from '../../addresses';
+import { Document } from '../../document';
+import { Range } from '../../range';
+import { Line, Dot, Forward } from '../../addresses';
+import { Address } from '../../address';
 
 describe(".+0", () => {
     let address: Address = new Forward(new Dot(), new Line(0));

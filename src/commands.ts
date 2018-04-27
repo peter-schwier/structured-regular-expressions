@@ -1,19 +1,6 @@
-import { Address } from "./addresses";
 import { Document } from "./document";
 import { Range } from "./range";
-
-export interface Command {
-    apply(document: Document): Document;
-}
-
-export class TempAddressCommand implements Command {
-    constructor(private readonly address: Address) { }
-
-    apply(document: Document): Document {
-        let range = this.address.getRange(document);
-        return new Document(document.text, [range], document.changes);
-    }
-}
+import { Command } from "./command";
 
 export class Print implements Command {
     apply(document: Document): Document {

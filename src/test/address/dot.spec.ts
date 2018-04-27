@@ -1,8 +1,9 @@
 import 'mocha';
 import { expect } from "chai";
-import {Document} from '../../document';
-import {Range} from '../../range';
-import { Address, Dot } from '../../addresses';
+import { Document } from '../../document';
+import { Range } from '../../range';
+import { Dot } from '../../addresses';
+import { Address } from '../../address';
 
 describe(Dot.name, () => {
     let address: Address = new Dot();

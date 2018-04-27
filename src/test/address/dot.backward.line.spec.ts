@@ -2,7 +2,8 @@ import 'mocha';
 import { expect } from "chai";
 import { Document } from '../../document';
 import { Range } from '../../range';
-import { Address, Backward, Dot, Line } from '../../addresses';
+import { Backward, Dot, Line } from '../../addresses';
+import { Address } from '../../address';
 
 describe(".-0", () => {
     let address: Address = new Backward(new Dot(), new Line(0));

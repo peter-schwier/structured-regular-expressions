@@ -1,7 +1,8 @@
 import 'mocha';
 import { expect } from "chai";
 import { Document } from '../../document';
-import { End, Address } from '../../addresses';
+import { End } from '../../addresses';
+import { Address } from '../../address';
 
 describe(End.name, () => {
     let address: Address = new End();

@@ -1,32 +1,28 @@
 import { Range } from "./range";
 import { Document } from "./document";
+import { Address, ForwardAddress, BackwardAddress } from "./address";
+import { Command } from "./command";
 
-export interface Address {
-    getRange(document: Document): Range;
-}
-
-export interface ForwardAddress {
-    forwardFromPosition(position: number): Address;
-}
-
-export interface BackwardAddress {
-    backwardFromPosition(position: number): Address;
-}
-
-export class Backward implements Address {
+export class Backward implements Command, Address {
     constructor(public readonly start: Address = new Dot(), public readonly next: BackwardAddress) { }
 
+    apply(document: Document): Document {
+        return new Document(document.text, [this.getRange(document)], document.changes);
+    }
     getRange(document: Document): Range {
         let startRange = this.start.getRange(document);
         return this.next.backwardFromPosition(startRange.start).getRange(document);
     }
 }
 
-export class Character implements Address, ForwardAddress, BackwardAddress {
+export class Character implements Command, Address, ForwardAddress, BackwardAddress {
     constructor(private readonly character: number) {
         if (character < 0) {
             throw new RangeError(`Cannot have a character number less than 0: ${character}`);
         }
+    }
+    apply(document: Document): Document {
+        return new Document(document.text, [this.getRange(document)], document.changes);
     }
     getRange(document: Document): Range {
         return this.forwardFromPosition(0).getRange(document);
@@ -76,27 +72,35 @@ export class Dot implements Address {
     }
 }
 
-export class End implements Address {
+export class End implements Command, Address {
     constructor() { }
+    apply(document: Document): Document {
+        return new Document(document.text, [this.getRange(document)], document.changes);
+    }
     getRange(document: Document): Range {
         return new Range(document.text.length, document.text.length);
     }
 }
 
-export class Forward implements Address {
+export class Forward implements Command, Address {
     constructor(public readonly start: Address = new Dot(), public readonly next: ForwardAddress) { }
-
+    apply(document: Document): Document {
+        return new Document(document.text, [this.getRange(document)], document.changes);
+    }
     getRange(document: Document): Range {
         let startRange = this.start.getRange(document);
         return this.next.forwardFromPosition(startRange.end).getRange(document);
     }
 }
 
-export class Line implements Address, ForwardAddress, BackwardAddress {
+export class Line implements Command, Address, ForwardAddress, BackwardAddress {
     constructor(private readonly line: number) {
         if (line < 0) {
             throw new RangeError(`Cannot have a line number less than 0: ${line}`);
         }
+    }
+    apply(document: Document): Document {
+        return new Document(document.text, [this.getRange(document)], document.changes);
     }
     getRange(document: Document): Range {
         return this.forwardFromPosition(0).getRange(document);
@@ -161,8 +165,11 @@ class BackwardLine implements Address {
     }
 }
 
-export class Regex implements Address, ForwardAddress, BackwardAddress {
+export class Regex implements Command, Address, ForwardAddress, BackwardAddress {
     constructor(private readonly regex: string) { }
+    apply(document: Document): Document {
+        return new Document(document.text, [this.getRange(document)], document.changes);
+    }
     getRange(document: Document): Range {
         return this.forwardFromPosition(0).getRange(document);
     }
@@ -220,9 +227,11 @@ class BackwardRegex implements Address {
     }
 }
 
-export class Span implements Address {
+export class Span implements Command, Address {
     constructor(public readonly start: Address = new Line(0), public readonly end: Address = new End()) { }
-
+    apply(document: Document): Document {
+        return new Document(document.text, [this.getRange(document)], document.changes);
+    }
     getRange(document: Document): Range {
         let startRange = this.start.getRange(document);
         let endRange = this.end.getRange(document);

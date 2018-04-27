@@ -1,6 +1,6 @@
 import { Range } from "./range";
 import { Print, Change, Insert } from "./changes";
-import { Command } from "./commands";
+import { Command } from "./command";
 
 export class Document {
     constructor(

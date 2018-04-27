@@ -1,8 +1,9 @@
 import 'mocha';
 import { expect } from "chai";
 import { Document } from '../../document';
-import { Command, Insert } from '../../commands';
+import { Insert } from '../../commands';
 import { Insert as InsertChange } from '../../changes';
+import { Command } from '../../command';
 
 describe(Insert.name, () => {
     describe("i/asdf/", () => {
