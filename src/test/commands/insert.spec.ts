@@ -11,7 +11,7 @@ describe(Insert.name, () => {
         describe("on empty string", () => {
             let document = new Document("");
             it("inserts 'asdf' at #0", () => {
-                let changed = document.apply(...commands);
+                let changed = document.apply(undefined, ...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -26,7 +26,7 @@ describe(Insert.name, () => {
         describe("on one line string", () => {
             let document = new Document("asdf");
             it("inserts 'asdf' at #0", () => {
-                let changed = document.apply(...commands);
+                let changed = document.apply(undefined, ...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")
@@ -41,7 +41,7 @@ describe(Insert.name, () => {
         describe("on multi line string", () => {
             let document = new Document("asdf\nfdsa\nasdf");
             it("inserts 'asdf' at #0", () => {
-                let changed = document.apply(...commands);
+                let changed = document.apply(undefined, ...commands);
                 expect(changed)
                     .has.property("changes")
                     .is.an("array")

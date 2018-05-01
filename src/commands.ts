@@ -1,6 +1,8 @@
 import { Document } from "./document";
 import { Range } from "./range";
 import { Command } from "./command";
+import { BackwardAddress, ForwardAddress } from "./address";
+import { Line } from "./addresses";
 
 export class Print implements Command {
     apply(document: Document): Document {
@@ -46,7 +48,7 @@ export class Conditional implements Command {
                 selections.push(selection);
             }
         });
-        return new Document(document.text, selections, document.changes);
+        return document.withSelections(selections);
     }
 }
 
@@ -63,7 +65,7 @@ export class Loop implements Command {
             let text = document.text.substring(0, selection.end);
 
             this.regex.lastIndex = selection.start;
-    
+
             let result = null;
             let lastIndex = this.regex.lastIndex;
             while (result = this.regex.exec(text)) {
@@ -81,6 +83,29 @@ export class Loop implements Command {
                 }
             }
         });
-        return new Document(document.text, selections, document.changes);
+        return document.withSelections(selections);
+    }
+}
+
+export class Backward implements Command {
+    constructor(public readonly next: BackwardAddress = new Line(1)) { }
+
+    apply(document: Document): Document {
+        let selections: Range[] = [];
+        document.selections.forEach((selection) => {
+            selections.push(this.next.backwardFromPosition(selection.start).getRange(document));
+        });
+        return document.withSelections(selections);
+    }
+}
+
+export class Forward implements Command {
+    constructor(public readonly next: ForwardAddress = new Line(1)) { }
+    apply(document: Document): Document {
+        let selections: Range[] = [];
+        document.selections.forEach((selection) => {
+            selections.push(this.next.forwardFromPosition(selection.end).getRange(document));
+        });
+        return document.withSelections(selections);
     }
 }

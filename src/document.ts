@@ -1,6 +1,7 @@
 import { Range } from "./range";
 import { Print, Change, Insert } from "./changes";
 import { Command } from "./command";
+import { Address } from "./address";
 
 export class Document {
     constructor(
@@ -8,6 +9,10 @@ export class Document {
         public readonly selections: Range[] = [new Range(0, 0)],
         public readonly changes: Change[] = []
     ) { }
+
+    withSelections(selections: Range[]): Document {
+        return new Document(this.text, selections, this.changes);
+    }
 
     lines(): Range[] {
         let regex = new RegExp(".*\n?", "g");
@@ -48,8 +53,11 @@ export class Document {
         return new Document(this.text, this.selections, this.changes.concat(change));
     }
 
-    apply(...commands: Command[]): Document {
+    apply(address?: Address, ...commands: Command[]): Document {
         let document: Document = this;
+        if (address !== undefined) {
+            document = document.withSelections([address.getRange(document)]);
+        }
         commands.forEach((command) => {
             document = command.apply(document);
         });

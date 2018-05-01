@@ -2,11 +2,13 @@ import 'mocha';
 import { expect } from "chai";
 import { Document } from '../../document';
 import { Range } from '../../range';
-import { Backward, Dot, Line } from '../../addresses';
+import { Backward as BackwardAddress, Dot, Line } from '../../addresses';
 import { Address } from '../../address';
+import { Backward as BackwardCommand } from "../../commands";
+import { Command } from '../../command';
 
 describe(".-0", () => {
-    let address: Address = new Backward(new Dot(), new Line(0));
+    let address: Address = new BackwardAddress(new Dot(), new Line(0));
     describe("on empty string", () => {
         let document = new Document("");
         let start = 0; let end = 0;
@@ -58,16 +60,20 @@ describe(".-0", () => {
 });
 
 describe("-0", () => {
-    let address: Address = new Backward(undefined, new Line(0));
+    let command: Command = new BackwardCommand(new Line(0));
     describe("on empty string", () => {
         let document = new Document("");
         let start = 0; let end = 0;
         it(`starts at ${start}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("end").that.equals(end);
         });
     });
@@ -75,11 +81,15 @@ describe("-0", () => {
         let document = new Document("asdf", [new Range(0, 2)], []);
         let start = 0; let end = 0;
         it(`starts at ${start}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("end").that.equals(end);
         });
     });
@@ -87,11 +97,15 @@ describe("-0", () => {
         let document = new Document("asdf", [new Range(2, 4)], []);
         let start = 0; let end = 2;
         it(`starts at ${start}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("end").that.equals(end);
         });
     });
@@ -99,18 +113,22 @@ describe("-0", () => {
         let document = new Document("asdf\nfdsa\nasdf", [new Range(7, 12)], []);
         let start = 5; let end = 7;
         it(`starts at ${start}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("end").that.equals(end);
         });
     });
 });
 
 describe(".-1", () => {
-    let address = new Backward(new Dot(), new Line(1));
+    let address: Address = new BackwardAddress(new Dot(), new Line(1));
     describe("on empty string", () => {
         let document = new Document("");
         let start = 0; let end = 0;
@@ -163,16 +181,20 @@ describe(".-1", () => {
 });
 
 describe("-1", () => {
-    let address = new Backward(undefined, new Line(1));
+    let command: Command = new BackwardCommand(new Line(1));
     describe("on empty string", () => {
         let document = new Document("");
         let start = 0; let end = 0;
         it(`starts at ${start}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("end").that.equals(end);
         });
     });
@@ -180,11 +202,15 @@ describe("-1", () => {
         let document = new Document("asdf", [new Range(0, 2)], []);
         let start = 0; let end = 0;
         it(`starts at ${start}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("end").that.equals(end);
         });
     });
@@ -192,11 +218,15 @@ describe("-1", () => {
         let document = new Document("asdf", [new Range(2, 4)], []);
         let start = 0; let end = 0;
         it(`starts at ${start}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("end").that.equals(end);
         });
     });
@@ -204,11 +234,15 @@ describe("-1", () => {
         let document = new Document("asdf\nfdsa\nasdf", [new Range(7, 12)], []);
         let start = 0; let end = 5;
         it(`starts at ${start}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("start").that.equals(start);
         });
         it(`ends at ${end}`, () => {
-            let range = address.getRange(document);
+            let changed = document.apply(undefined, command);
+            expect(changed).has.property("selections").with.property("length").that.equals(1);
+            let range = changed.selections[0];
             expect(range).has.property("end").that.equals(end);
         });
     });
