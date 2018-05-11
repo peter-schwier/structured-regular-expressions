@@ -8,27 +8,27 @@ This design document provides specific implementation details of applying text c
     * [Match]
 * [Command]
 * Modifications
-    * [Print]
-    * [Insert]
-    * [Append]
-    * [Replace]
-    * [Delete]
+    * [Print] implements [Command]
+    * [Insert] implements [Command]
+    * [Append] implements [Command]
+    * [Replace] implements [Command]
+    * [Delete] implements [Command]
 * Loops and Conditionals
-    * [Search]
-    * [SearchBetween]
-    * [Conditional]
-    * [NegatedConditional]
-    * [Modulus]
-    * [NumberedSelections]
+    * [Search] implements [Command]
+    * [SearchBetween] implements [Command]
+    * [Conditional] implements [Command]
+    * [NegatedConditional] implements [Command]
+    * [Modulus] implements [Command]
+    * [NumberedSelections] implements [Command]
 * Selectors
-    * [Span]
-        * [SpanAddress]
-    * [Forward]
-        * [ForwardAddress]
+    * [Span] implements [Command]
+        * [Address]
+    * [Forward] implements [Command], [Address]
         * [ForwardOffsetAddress]
-    * [Backward]
-        * [BackwardAddress]
+    * [Backward] implements [Command], [Address]
         * [BackwardOffsetAddress]
+    * [Character] implements [Command], [Address], [ForwardOffsetAddress], [BackwardOffsetAddress]
+
 
 
 ## Document Class
@@ -460,8 +460,8 @@ The Span class modifies the document selections. If the start and end are both g
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| start | [SpanAddress] | The starting address of the span |
-| end | [SpanAddress] | The ending address of the span |
+| start | [Address] | The starting address of the span |
+| end | [Address] | The ending address of the span |
 
 The constructor throws an Error if `start.global !== end.global`.
 
@@ -498,9 +498,9 @@ if (start.global) {
 }
 ```
 
-## SpanAddress Interface
+## Address Interface
 
-The SpanAddress interface provides for a character offset either within the scope of a span in a document or in the entire document.
+The Address interface provides for a character offset either within the scope of an existing selection in a document or in the entire document.
 
 ### Properties
 
@@ -517,14 +517,20 @@ Return the [Range] based on the selection, if defined, or based on the document.
 
 ## Forward Class
 
-The Forward class modifies the document selections. If the start is global then the result is one selection. Otherwise, there is one selection per selection in the original document. This class implements the [Command] Interface.
+The Forward class modifies the document selections. If the start is global then the result is one selection. Otherwise, there is one selection per selection in the original document. This class implements the [Command] Interface and the [Address] Interface.
 
 ### Constructor
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| start | [ForwardAddress] | The starting address |
+| start | [Address] | The starting address |
 | next | [ForwardOffsetAddress] | The address forward from the end of `start` |
+
+### Properties
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| global | boolean | returns `start.global` |
 
 ### Methods
 
@@ -534,25 +540,16 @@ Replace the selections in the document with the selections from `start` offset f
 
 ```javascript
 if (start.global) {
-    let range = start.getRange(document);
-    range = next.getRange(document, range);
+    let range = this.getRange(document);
     return new Document(
         document.text, 
         [range], 
         document.changes
     );
 } else {
-    let selections: Range[] = [];
-
-    document.selections.forEach((selection) => {
-        let range = start.getRange(document, selection);
-        range = next.getRange(document, range);
-        return new Document(
-            document.text, 
-            [range], 
-            document.changes
-        );
-    });
+    let selections: Range[] = 
+        document.selections.map((selection) =>
+            this.getRange(document, selection));
 
     return new Document(
         document.text, 
@@ -562,21 +559,15 @@ if (start.global) {
 }
 ```
 
-## ForwardAddress Interface
-
-The ForwardAddress interface provides for a character offset either within the scope of a span in a document or in the entire document.
-
-### Properties
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| global | boolean | Is the address global within the document or relative to a selection |
-
-### Methods
-
 #### getRange(document: [Document], selection?: [Range]): [Range]
 
 Return the [Range] based on the selection, if defined, or based on the document.
+
+```javascript
+let range = start.getRange(document, selection);
+range = next.getRangeForward(document, range);
+return range;
+```
 
 ## ForwardOffsetAddress Interface
 
@@ -584,21 +575,27 @@ The ForwardOffsetAddress interface provides for a character offset starting from
 
 ### Methods
 
-#### getRange(document: [Document], selection: [Range]): [Range]
+#### getRangeForward(document: [Document], selection: [Range]): [Range]
 
 Return the [Range] based on the selection.
 
 
 ## Backward Class
 
-The Backward class modifies the document selections. If the start is global then the result is one selection. Otherwise, there is one selection per selection in the original document. This class implements the [Command] Interface.
+The Backward class modifies the document selections. If the start is global then the result is one selection. Otherwise, there is one selection per selection in the original document. This class implements the [Command] Interface and the [Address] Interface.
 
 ### Constructor
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| start | [BackwardAddress] | The starting address |
+| start | [Address] | The starting address |
 | next | [BackwardOffsetAddress] | The address backward from the start of `start` |
+
+### Properties
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| global | boolean | returns `start.global` |
 
 ### Methods
 
@@ -608,25 +605,16 @@ Replace the selections in the document with the selections from `start` offset b
 
 ```javascript
 if (start.global) {
-    let range = start.getRange(document);
-    range = next.getRange(document, range);
+    let range = this.getRange(document);
     return new Document(
         document.text, 
         [range], 
         document.changes
     );
 } else {
-    let selections: Range[] = [];
-
-    document.selections.forEach((selection) => {
-        let range = start.getRange(document, selection);
-        range = next.getRange(document, range);
-        return new Document(
-            document.text, 
-            [range], 
-            document.changes
-        );
-    });
+    let selections: Range[] = 
+        document.selections.map((selection) =>
+            this.getRange(document, selection));
 
     return new Document(
         document.text, 
@@ -636,21 +624,15 @@ if (start.global) {
 }
 ```
 
-## BackwardAddress Interface
-
-The BackwardAddress interface provides for a character offset either within the scope of a span in a document or in the entire document.
-
-### Properties
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| global | boolean | Is the address global within the document or relative to a selection |
-
-### Methods
-
 #### getRange(document: [Document], selection?: [Range]): [Range]
 
 Return the [Range] based on the selection, if defined, or based on the document.
+
+```javascript
+let range = start.getRange(document, selection);
+range = next.getRangeBackward(document, range);
+return range;
+```
 
 ## BackwardOffsetAddress Interface
 
@@ -658,9 +640,71 @@ The ForwardOffsetAddress interface provides for a character offset starting from
 
 ### Methods
 
-#### getRange(document: [Document], selection: [Range]): [Range]
+#### getRangeBackward(document: [Document], selection: [Range]): [Range]
 
 Return the [Range] based on the selection.
+
+
+## Character Class
+
+The Character class modifies the document selection. The result is one selection. This class implements the [Command] Interface and the [Address] Interface.
+
+### Constructor
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| offset | number | The number of characters |
+
+### Properties
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| global | boolean | returns `true` |
+
+### Methods
+
+#### apply(document: [Document]): [Document]
+
+Replace the selections in the document.
+
+```javascript
+let range = this.getRange(document);
+return new Document(
+    document.text, 
+    [range], 
+    document.changes
+);
+```
+
+#### getRange(document: [Document], selection?: [Range]): [Range]
+
+Return the [Range] based on the document.
+
+```javascript
+let range = this.getRangeForward(document, new Range(0, 0));
+return range;
+```
+
+#### getRangeForward(document: [Document], selection: [Range]): [Range]
+
+Return the [Range] based on the selection.
+
+```javascript
+let offset = selection.end + this.offset;
+let range = new Range(offset, offset);
+return range;
+```
+
+#### getRangeBackward(document: [Document], selection: [Range]): [Range]
+
+Return the [Range] based on the selection.
+
+```javascript
+let offset = selection.start - this.offset;
+let range = new Range(offset, offset);
+return range;
+```
+
 
 
 [Document]: #document-class
@@ -684,10 +728,9 @@ Return the [Range] based on the selection.
 [NumberedSelections]: #numberedselections-class
 [Match]: #match-interface
 [Span]: #span-class
-[SpanAddress]: #spanaddress-interface
+[Address]: #address-interface
 [Forward]: #forward-class
-[ForwardAddress]: #forwardaddress-interface
 [ForwardOffsetAddress]: #forwardoffsetaddress-interface
 [Backward]: #backward-class
-[BackwardAddress]: #backwardaddress-interface
 [BackwardOffsetAddress]: #backwardoffsetaddress-interface
+[Character]: #character-class
