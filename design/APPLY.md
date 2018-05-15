@@ -27,6 +27,7 @@ This design document provides specific implementation details of applying text c
         * [ForwardOffsetAddress]
     * [Backward] implements [Command], [Address]
         * [BackwardOffsetAddress]
+    * [Dot] implements [Address]
     * [Character] implements [Command], [Address], [ForwardOffsetAddress], [BackwardOffsetAddress]
 
 
@@ -43,7 +44,7 @@ The Document class contains the document text, current selections, and the curre
 | selections    | [Range] []   | The set of non-overlapping selections in the doucment |
 | changes       | [Changed] []   | The set of modifications the text commands would introduce to the document |
 
-The document constructor throws an Error ifthere are any overlapping or duplicated selections.
+The document constructor throws an Error if there are any overlapping or duplicated selections.
 
 ### Properties
 
@@ -96,6 +97,7 @@ The Match interface provides information about a search and a match in a [Docume
 #### next(): [Match] | undefined
 
 Search for the next match of this regex in the document and either return a [Match] or undefined if there is no next match.
+
 
 ## Command Interface
 
@@ -645,6 +647,28 @@ The ForwardOffsetAddress interface provides for a character offset starting from
 Return the [Range] based on the selection.
 
 
+
+## Dot Class
+
+The Dot class returns the current selection. This class implements the [Address] Interface.
+
+### Properties
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| global | boolean | returns `false` |
+
+### Methods
+
+#### getRange(document: [Document], selection?: [Range]): [Range]
+
+Return the [Range] based on the document.
+
+```javascript
+return selection;
+```
+
+
 ## Character Class
 
 The Character class modifies the document selection. The result is one selection. This class implements the [Command] Interface and the [Address] Interface.
@@ -733,4 +757,5 @@ return range;
 [ForwardOffsetAddress]: #forwardoffsetaddress-interface
 [Backward]: #backward-class
 [BackwardOffsetAddress]: #backwardoffsetaddress-interface
+[Dot]: #dot-class
 [Character]: #character-class
