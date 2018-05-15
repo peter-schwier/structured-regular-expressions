@@ -30,7 +30,7 @@ This design document provides specific implementation details of applying text c
     * [Dot] implements [Address]
     * [Character] implements [Command], [Address], [ForwardOffsetAddress], [BackwardOffsetAddress]
     * [Line] implements [Command], [Address], [ForwardOffsetAddress], [BackwardOffsetAddress]
-
+    * [Regex] implements [Command], [Address], [ForwardOffsetAddress], [BackwardOffsetAddress]
 
 
 ## Document Class
@@ -82,6 +82,20 @@ return this.text.substring(selection.start, selection.end);
 
 Search for the first match of this regex in the selection in the document and either return a [Match] or undefined if there is no next match. If regex is all lower case then the match is case insensitive.
 
+#### findAllMatches(regex: string, selection: [Range]): [Match] []
+
+Find all the matches of this regex in the selection in the document. Return an empty array if there is no match.
+
+```javascript
+let matches = [];
+let match = this.findMatch(regex, selection);
+while (match) {
+    matches.push(match);
+    match = match.next();
+}
+return matches;
+```
+
 ## Match Interface
 
 The Match interface provides information about a search and a match in a [Document]. This interface extends the [Range] interface.
@@ -98,7 +112,7 @@ The Match interface provides information about a search and a match in a [Docume
 
 #### next(): [Match] | undefined
 
-Search for the next match of this regex in the document and either return a [Match] or undefined if there is no next match.
+Search for the next match of this regex in the selection and either return a [Match] or undefined if there is no next match.
 
 
 ## Command Interface
@@ -402,13 +416,10 @@ The Modulus class modifies the document selections. Include each n*th* selection
 Replace the selections in the document with the n*th* selections from the document.
 
 ```javascript
-let selections: Range[] = [];
+let selections: Range[] = document.selections.filter(
+    (selection, index) =>
+        (index % this.modulus) === 0);
 
-document.selections.forEach((selection, index) => {
-    if ((index % this.modulus) === 0) {
-        selections.push(selection);
-    }
-});
 return new Document(
     document.text, 
     selections, 
@@ -673,7 +684,7 @@ return selection;
 
 ## Character Class
 
-The Character class modifies the document selection. The result is one selection. This class implements the [Command] Interface and the [Address] Interface.
+The Character class modifies the document selection. The result is one selection. This class implements the [Command], [Address], [ForwardOffsetAddress], and [BackwardOffsetAddress] Interfaces.
 
 ### Constructor
 
@@ -734,7 +745,7 @@ return range;
 
 ## Line Class
 
-The Line class modifies the document selection. The result is one selection. This class implements the [Command] Interface and the [Address] Interface.
+The Line class modifies the document selection. The result is one selection. This class implements the [Command], [Address], [ForwardOffsetAddress], and [BackwardOffsetAddress] Interfaces.
 
 ### Constructor
 
@@ -768,9 +779,8 @@ return new Document(
 Return the [Range] based on the document.
 
 ```javascript
-let lines = document.lines;
-let offset = Math.max(0, Math.min(this.offset, lines.length - 1));
-return lines[offset];
+let range = this.getRangeForward(document, new Range(0, 0));
+return range;
 ```
 
 #### getRangeForward(document: [Document], selection: [Range]): [Range]
@@ -792,6 +802,69 @@ let lines = document.lines.filter((line) => line.start <= selection.start);
 let offset = Math.max(0, Math.min(this.offset, lines.length - 1));
 offset = (lines.length - 1) - offset;
 return lines[offset];
+```
+
+
+## Regex Class
+
+The Regex class modifies the document selection. The result is one selection. This class implements the [Command], [Address], [ForwardOffsetAddress], and [BackwardOffsetAddress] Interfaces.
+
+### Constructor
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| regex | string | The regular expression. If all lower case, then case insensitive. |
+
+### Properties
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| global | boolean | returns `true` |
+
+### Methods
+
+#### apply(document: [Document]): [Document]
+
+Replace the selections in the document.
+
+```javascript
+let range = this.getRange(document);
+return new Document(
+    document.text, 
+    [range], 
+    document.changes
+);
+```
+
+#### getRange(document: [Document], selection?: [Range]): [Range]
+
+Return the [Range] based on the document.
+
+```javascript
+let range = this.getRangeForward(document, new Range(0, 0));
+return range;
+```
+
+#### getRangeForward(document: [Document], selection: [Range]): [Range]
+
+Return the [Range] based on the selection.
+
+```javascript
+let match = document.findMatch(this.regex, new Range(selection.end, document.text.length));
+return match;
+```
+
+#### getRangeBackward(document: [Document], selection: [Range]): [Range]
+
+Return the [Range] based on the selection.
+
+```javascript
+let matches = document.findAllMatches(this.regex, new Range(0, selection.start));
+if (matches.length <= 0) {
+    return undefined;
+} else {
+    return matches[matches.length - 1];
+}
 ```
 
 
@@ -825,3 +898,4 @@ return lines[offset];
 [Dot]: #dot-class
 [Character]: #character-class
 [Line]: #line-class
+[Regex]: #regex-class
