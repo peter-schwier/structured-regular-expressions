@@ -29,6 +29,7 @@ This design document provides specific implementation details of applying text c
         * [BackwardOffsetAddress]
     * [Dot] implements [Address]
     * [Character] implements [Command], [Address], [ForwardOffsetAddress], [BackwardOffsetAddress]
+    * [Line] implements [Command], [Address], [ForwardOffsetAddress], [BackwardOffsetAddress]
 
 
 
@@ -53,6 +54,7 @@ The document constructor throws an Error if there are any overlapping or duplica
 | text          | string    | The text of the document |
 | selections    | [Range] []   | The set of non-overlapping selections in the doucment |
 | changes       | [Changed] []   | The set of modifications the text commands would introduce to the document |
+| lines         | [Range] []    | The list of lines in the document. The first [Range] is the (`0`,`0`) range at the start of the document, the last [Range] is the (`text.length`, `text.length`) range at the end of the document. The remaining [Range]s match the regex `.*\n` in the document. |
 
 ### Methods
 
@@ -730,6 +732,69 @@ return range;
 ```
 
 
+## Line Class
+
+The Line class modifies the document selection. The result is one selection. This class implements the [Command] Interface and the [Address] Interface.
+
+### Constructor
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| offset | number | The number of lines, may be zero |
+
+### Properties
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| global | boolean | returns `true` |
+
+### Methods
+
+#### apply(document: [Document]): [Document]
+
+Replace the selections in the document.
+
+```javascript
+let range = this.getRange(document);
+return new Document(
+    document.text, 
+    [range], 
+    document.changes
+);
+```
+
+#### getRange(document: [Document], selection?: [Range]): [Range]
+
+Return the [Range] based on the document.
+
+```javascript
+let lines = document.lines;
+let offset = Math.max(0, Math.min(this.offset, lines.length - 1));
+return lines[offset];
+```
+
+#### getRangeForward(document: [Document], selection: [Range]): [Range]
+
+Return the [Range] based on the selection.
+
+```javascript
+let lines = document.lines.filter((line) => line.end >= selection.end);
+let offset = Math.max(0, Math.min(this.offset, lines.length - 1));
+return lines[offset];
+```
+
+#### getRangeBackward(document: [Document], selection: [Range]): [Range]
+
+Return the [Range] based on the selection.
+
+```javascript
+let lines = document.lines.filter((line) => line.start <= selection.start);
+let offset = Math.max(0, Math.min(this.offset, lines.length - 1));
+offset = (lines.length - 1) - offset;
+return lines[offset];
+```
+
+
 
 [Document]: #document-class
 [Range]: PUBLIC.md#range-class
@@ -759,3 +824,4 @@ return range;
 [BackwardOffsetAddress]: #backwardoffsetaddress-interface
 [Dot]: #dot-class
 [Character]: #character-class
+[Line]: #line-class
