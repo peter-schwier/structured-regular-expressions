@@ -1,8 +1,11 @@
 import 'mocha';
 import { expect } from "chai";
+import * as sre from '../main';
 
-describe("main", () => {
-    it("asdf equals asdf", () => {
-        expect("asdf").to.equal("asdf");
+describe("Document", () => {
+    it("apply adds changes", () => {
+        let original = new sre.Document("asdf");
+        let changed = original.apply("asdf");
+        expect(changed).has.property("changes").length(1);
     });
 });
