@@ -49,9 +49,8 @@ The Document class contains the document text, current selections, and the curre
 
 ### Methods
 
-| Name | Returns | Arguments | Description |
-| ---- | ------- | --------- | ----------- |
-| apply | Document | commands:string | Parse the command string to command objects and apply the commands to the document |
+#### apply(commands: string): Document
+Parse the command string to command objects and apply the commands to the document
 
 ## Range Class
 
@@ -73,22 +72,10 @@ The constructor throws an Error if the start is less than zero or the end is les
 | start | number | The starting character offset |
 | end | number | The ending character offset |
 
-### Methods
-
-None
-
 
 ## Changed Interface
 
 Each of the four change classes implement the Changed interface. 
-
-### Properties
-
-None
-
-### Methods
-
-None
 
 
 ## Printed Class
@@ -107,9 +94,6 @@ The Printed class implements the Changed interface. This change comes about from
 | ---- | ---- | ----------- |
 | text | string | The text to print |
 
-### Methods
-
-None
 
 ## Inserted Class
 
@@ -129,9 +113,6 @@ The Inserted class implements the Changed interface. This change comes about fro
 | offset | number | The character offset at which to insert the text |
 | text | string | The text to insert |
 
-### Methods
-
-None
 
 ## Replaced Class
 
@@ -151,9 +132,6 @@ The Replaced class implements the Changed interface. This change comes about fro
 | range | Range | The range of text in the document to replace |
 | text | string | The replacement text |
 
-### Methods
-
-None
 
 ## Deleted Class
 
@@ -170,8 +148,3 @@ The Deleted class implements the Changed interface. This change comes about from
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | range | Range | The range of text in the document to replace |
-
-### Methods
-
-None
-
