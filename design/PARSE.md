@@ -15,6 +15,8 @@ This design document provides specific implementation details of parsing a comma
     * [Conditional]
     * [NegatedConditional]
     * [Modulus]
+    * [PushSelections]
+    * [PopSelections]
     * [NumberedSelections]
     * [Span]
     * [Forward]
@@ -33,6 +35,8 @@ This design document provides specific implementation details of parsing a comma
 * [Conditional] = "g" regex:[DelimitedRegex]
 * [NegatedConditional] = "v" regex:[DelimitedRegex]
 * [Modulus] = "%" modulus:Number
+* [PushSelections] = "{"
+* [PopSelections] = "}"
 * [NumberedSelections] = "@" included:NumberRangeList
 * [Span] = start:[Address] "," end:[Address]
 * [Forward] = start:[Address] "+" next:[ForwardOffsetAddress]

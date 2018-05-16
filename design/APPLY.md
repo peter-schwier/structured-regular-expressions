@@ -20,6 +20,8 @@ This design document provides specific implementation details of applying text c
     * [NegatedConditional] implements [Command]
     * [Modulus] implements [Command]
     * [NumberedSelections] implements [Command]
+    * [PushSelections] implements [Command]
+    * [PopSelections] implements [Command]
 * Selectors
     * [Span] implements [Command]
         * [Address]
@@ -44,6 +46,7 @@ The Document class contains the document text, current selections, and the curre
 | text          | string    | The text of the document |
 | selections    | [Range] []   | The set of non-overlapping selections in the doucment |
 | changes       | [Changed] []   | The set of modifications the text commands would introduce to the document |
+| stack         | [Range] [][] | A stack of selections. Add and remove from the end of the array. |
 
 The document constructor throws an Error if there are any overlapping or duplicated selections.
 
@@ -54,9 +57,50 @@ The document constructor throws an Error if there are any overlapping or duplica
 | text          | string    | The text of the document |
 | selections    | [Range] []   | The set of non-overlapping selections in the doucment |
 | changes       | [Changed] []   | The set of modifications the text commands would introduce to the document |
+| stack         | [Range] [][] | A stack of selections. Add and remove from the end of the array. |
 | lines         | [Range] []    | The list of lines in the document. The first [Range] is the (`0`,`0`) range at the start of the document, the last [Range] is the (`text.length`, `text.length`) range at the end of the document. The remaining [Range]s match the regex `.*\n` in the document. |
 
 ### Methods
+
+#### withSelections(selections: [Range] []): [Document]
+```javascript
+return new Document(
+    this.text,
+    selections,
+    this.changes,
+    this.stack
+);
+```
+
+#### addChanges(changes: [Changed] []): [Document]
+```javascript
+return new Document(
+    this.text,
+    this.selections,
+    this.changes.concat(changes),
+    this.stack
+);
+```
+
+#### pushSelections(): [Document]
+```javascript
+return new Document(
+    this.text,
+    this.selections,
+    this.changes,
+    this.stack.concat([this.selections])
+);
+```
+
+#### popSelections(): [Document]
+```javascript
+return new Document(
+    this.text,
+    this.stack[this.stack.length - 1],
+    this.changes,
+    this.stack.slice(0, -1)
+);
+```
 
 #### apply(commands: [Command] []): [Document]
 
@@ -136,16 +180,12 @@ The Print class adds the [Printed] change to the document for each selection in 
 Add a Printed change to the document for each selection in the document.
 
 ```javascript
-return new Document(
-    document.text, 
-    document.selections, 
-    document.changes.concat(
+return document.addChanges(
         document.selections.map(
             (selection) =>
                 new Printed(document.getSelectionText(selection))
         )
-    )
-);
+    );
 ```
 
 ## Insert Class
@@ -165,16 +205,12 @@ The Insert class adds the [Inserted] change to the document for each selection i
 Add a [Inserted] change to the document for each selection in the document.
 
 ```javascript
-return new Document(
-    document.text, 
-    document.selections, 
-    document.changes.concat(
+return document.addChanges(
         document.selections.map(
             (selection) =>
                 new Inserted(selection.start, this.text)
         )
-    )
-);
+    );
 ```
 
 ## Append Class
@@ -194,16 +230,12 @@ The Append class adds the [Inserted] change to the document for each selection i
 Add a [Inserted] change to the document for each selection in the document.
 
 ```javascript
-return new Document(
-    document.text, 
-    document.selections, 
-    document.changes.concat(
+return document.addChanges(
         document.selections.map(
             (selection) =>
                 new Inserted(selection.end, this.text)
         )
-    )
-);
+    );
 ```
 
 ## Replace Class
@@ -223,16 +255,12 @@ The Replace class adds the [Replaced] change to the document for each selection 
 Add a [Replaced] change to the document for each selection in the document.
 
 ```javascript
-return new Document(
-    document.text, 
-    document.selections, 
-    document.changes.concat(
+return document.addChanges(
         document.selections.map(
             (selection) =>
                 new Replaced(selection, this.text)
         )
-    )
-);
+    );
 ```
 
 ## Delete Class
@@ -246,17 +274,14 @@ The Delete class adds the [Deleted] change to the document for each selection in
 Add a [Deleted] change to the document for each selection in the document.
 
 ```javascript
-return new Document(
-    document.text, 
-    document.selections, 
-    document.changes.concat(
+return document.addChanges(
         document.selections.map(
             (selection) =>
                 new Deleted(selection)
         )
-    )
-);
+    );
 ```
+
 
 ## Search Class
 
@@ -286,11 +311,7 @@ document.selections.forEach((selection) => {
         match = match.next();
     }
 });
-return new Document(
-    document.text, 
-    selections, 
-    document.changes
-);
+return document.withSelections(selection);
 ```
 
 ## SearchBetween Class
@@ -324,11 +345,7 @@ document.selections.forEach((selection) => {
     }
     selections.push(new Range(start, selection.end));
 });
-return new Document(
-    document.text, 
-    selections, 
-    document.changes
-);
+return document.withSelections(selection);
 ```
 
 ## Conditional Class
@@ -358,11 +375,7 @@ document.selections.forEach((selection) => {
         selections.push(selection);
     }
 });
-return new Document(
-    document.text, 
-    selections, 
-    document.changes
-);
+return document.withSelections(selection);
 ```
 
 ## NegatedConditional Class
@@ -392,11 +405,7 @@ document.selections.forEach((selection) => {
         selections.push(selection);
     }
 });
-return new Document(
-    document.text, 
-    selections, 
-    document.changes
-);
+return document.withSelections(selection);
 ```
 
 ## Modulus Class
@@ -420,11 +429,7 @@ let selections: Range[] = document.selections.filter(
     (selection, index) =>
         (index % this.modulus) === 0);
 
-return new Document(
-    document.text, 
-    selections, 
-    document.changes
-);
+return document.withSelections(selection);
 ```
 
 ## NumberedSelections Class
@@ -439,7 +444,7 @@ The NumberedSelections class modifies the document selections. Include only the 
 
 The constructor throws an Error if any range includes a Range.start that is less than or equal to 0.
 
-### Methods
+### Methods/
 
 #### apply(document: [Document]): [Document]
 
@@ -460,12 +465,33 @@ document.selections.forEach((selection, index) => {
         selections.push(selection);
     }
 });
-return new Document(
-    document.text, 
-    selections, 
-    document.changes
-);
+return document.withSelections(selection);
 ```
+
+## PushSelections Class
+
+The PushSelections class saves the document selections to the document stack. This class implements the [Command] Interface.
+
+### Methods/
+
+#### apply(document: [Document]): [Document]
+
+```javascript
+return document.pushSelections();
+```
+
+## PopSelections Class
+
+The PopSelections class sets the document selections by popping from the document stack. This class implements the [Command] Interface.
+
+### Methods/
+
+#### apply(document: [Document]): [Document]
+
+```javascript
+return document.popSelections();
+```
+
 
 ## Span Class
 
@@ -488,13 +514,11 @@ Replace the selections in the document with the selections from `start` and `end
 
 ```javascript
 if (start.global) { 
-    return new Document(
-        document.text, 
-        [new Range(
+    return document.withSelections([
+        new Range(
             start.getRange(document).start, 
-            end.getRange(document).end)], 
-        document.changes
-    );
+            end.getRange(document).end)
+    ]);
 } else {
     let selections: Range[] = [];
 
@@ -505,11 +529,7 @@ if (start.global) {
         ));
     });
 
-    return new Document(
-        document.text, 
-        selections, 
-        document.changes
-    );
+    return document.withSelections(selection);
 }
 ```
 
@@ -556,21 +576,13 @@ Replace the selections in the document with the selections from `start` offset f
 ```javascript
 if (start.global) {
     let range = this.getRange(document);
-    return new Document(
-        document.text, 
-        [range], 
-        document.changes
-    );
+    return document.withSelections([range]);
 } else {
     let selections: Range[] = 
         document.selections.map((selection) =>
             this.getRange(document, selection));
 
-    return new Document(
-        document.text, 
-        selections, 
-        document.changes
-    );
+    return document.withSelections(selection);
 }
 ```
 
@@ -621,21 +633,13 @@ Replace the selections in the document with the selections from `start` offset b
 ```javascript
 if (start.global) {
     let range = this.getRange(document);
-    return new Document(
-        document.text, 
-        [range], 
-        document.changes
-    );
+    return document.withSelections([range]);
 } else {
     let selections: Range[] = 
         document.selections.map((selection) =>
             this.getRange(document, selection));
 
-    return new Document(
-        document.text, 
-        selections, 
-        document.changes
-    );
+    return document.withSelections(selection);
 }
 ```
 
@@ -706,11 +710,7 @@ Replace the selections in the document.
 
 ```javascript
 let range = this.getRange(document);
-return new Document(
-    document.text, 
-    [range], 
-    document.changes
-);
+return document.withSelections([range]);
 ```
 
 #### getRange(document: [Document], selection?: [Range]): [Range]
@@ -767,11 +767,7 @@ Replace the selections in the document.
 
 ```javascript
 let range = this.getRange(document);
-return new Document(
-    document.text, 
-    [range], 
-    document.changes
-);
+return document.withSelections([range]);
 ```
 
 #### getRange(document: [Document], selection?: [Range]): [Range]
@@ -829,11 +825,7 @@ Replace the selections in the document.
 
 ```javascript
 let range = this.getRange(document);
-return new Document(
-    document.text, 
-    [range], 
-    document.changes
-);
+return document.withSelections([range]);
 ```
 
 #### getRange(document: [Document], selection?: [Range]): [Range]
@@ -899,3 +891,5 @@ if (matches.length <= 0) {
 [Character]: #character-class
 [Line]: #line-class
 [Regex]: #regex-class
+[PushSelections]: #pushselections-class
+[PopSelections]: #popselections-class

@@ -22,8 +22,10 @@ The library will provide two sub-libraries and a common interface that uses both
 ```javascript
 let sre = require("structed-regular-expressions");
 let original = new sre.Document("Hello World!");
-let changed = original.apply("/ /c/ Cruel, Cruel /");
+let changed = original.apply("/ /c/ Cruel, Curel /");
 print(changed.text); "Hello Cruel, Curel World!"
+changed = changed.apply("/Curel/c/Cruel/");
+print(changed.text); "Hello Cruel, Cruel World!"
 ```
 
 ## Document Class
