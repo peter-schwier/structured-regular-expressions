@@ -1,46 +1,41 @@
+import { Changed, Range } from "./apply";
+import * as apply from "./apply";
+export { Range, Changed, Printed, Inserted, Replaced, Deleted } from "./apply";
 
-export class Document implements Document {
-    readonly changes: Changed[] = [];
-    constructor(
-        public readonly text: string, 
-        public readonly selections: Range[] = [new Range(0, 0)]
+export interface IDocument {
+    readonly text: string;
+    readonly selections: Range[];
+    readonly changes: Changed[];
+    apply(commands: string): IDocument;
+}
+
+class BaseDocument implements IDocument {
+    protected constructor(
+        private readonly document: apply.Document
     ) { }
-
-    public apply(commands: string): Document {
-        // TODO: Call Parse and Apply libraries
-        return new ChangedDocument(this.text, this.selections, [new Printed(commands)]);
+    get text(): string {
+        return this.document.text;
+    }
+    get selections(): Range[] {
+        return this.document.selections;
+    }
+    get changes(): Changed[] {
+        return this.document.changes;
+    }
+    public apply(commands: string): IDocument {
+        // Todo: Call Parse library to get commandArray
+        let commandArray: apply.Command[] = [new apply.Print()];
+        return new BaseDocument(
+            this.document.apply(commandArray)
+        );
     }
 }
 
-class ChangedDocument extends Document {
+export class Document extends BaseDocument {
     constructor(
-        public readonly text: string, 
-        public readonly selections: Range[],
-        public readonly changes: Changed[]
-    ) { 
-        super(text, selections);
-        this.changes = changes;
+        text: string,
+        selections: Range[] = [new Range(0, 0)]
+    ) {
+        super(new apply.Document(text, selections, [], []));
     }
-}
-
-export class Range {
-    constructor(public readonly start: number, public readonly end: number) { }
-}
-
-export interface Changed { }
-
-export class Printed implements Changed {
-    constructor(public readonly text: string) { }
-}
-
-export class Inserted implements Changed {
-    constructor(public readonly offset: number, public readonly text: string) { }
-}
-
-export class Replaced implements Changed {
-    constructor(public readonly range: Range, public readonly text: string) { }
-}
-
-export class Deleted implements Changed {
-    constructor(public readonly range: Range) { }
 }
