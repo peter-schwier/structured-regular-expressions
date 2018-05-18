@@ -1,6 +1,7 @@
 import { Changed, Range } from "./apply";
 import * as apply from "./apply";
 export { Range, Changed, Printed, Inserted, Replaced, Deleted } from "./apply";
+let parser = require("./parser");
 
 export interface IDocument {
     readonly text: string;
@@ -24,9 +25,9 @@ class BaseDocument implements IDocument {
     }
     public apply(commands: string): IDocument {
         // Todo: Call Parse library to get commandArray
-        let commandArray: apply.Command[] = [new apply.Print()];
+        let parsed = <apply.Command[]> parser.parse(commands, {});
         return new BaseDocument(
-            this.document.apply(commandArray)
+            this.document.apply(parsed)
         );
     }
 }

@@ -136,7 +136,7 @@ TextChar
  * "TextNonTerminator".
  */
 TextBackslashSequence
-  = "\\" char_:TextNonTerminator { return backslashEscapes(char_); }
+  = "\\" char_:TextNonTerminator { return "\\" + char_; }
 
 TextNonTerminator
   = !LineTerminator char_:SourceCharacter { return char_; }
