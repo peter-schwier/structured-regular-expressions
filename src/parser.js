@@ -158,7 +158,7 @@ function peg$parse(input, options) {
       peg$c13 = function() { return new apply.Delete(); },
       peg$c14 = "x",
       peg$c15 = peg$literalExpectation("x", false),
-      peg$c16 = function(regex) { return new apply.Search(regex || ".*\\r?\\n?"); },
+      peg$c16 = function(regex) { return new apply.Search(regex || apply.Document.lineRegex); },
       peg$c17 = "y",
       peg$c18 = peg$literalExpectation("y", false),
       peg$c19 = function(regex) { return new apply.SearchBetween(regex); },

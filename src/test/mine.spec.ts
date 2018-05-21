@@ -49,3 +49,18 @@ documentFromFile("src/test/mine.txt", [new sre.Range(0, Number.MAX_SAFE_INTEGER)
         });
     });
 });
+
+
+documentFromFile("src/test/mine.txt", [new sre.Range(0, 0)], (command) => {
+    command('1p', (it) => {
+        it('="MINE."', (getChangedDocument) => {
+            let changed = getChangedDocument();
+            expect(changed).has.property("changes").length(1);
+            let change = changed.changes[0];
+            expect(change)
+                .is.instanceOf(sre.Printed)
+                .and.has.property("text")
+                .that.equals("MINE.\r\n");
+        });
+    });
+});

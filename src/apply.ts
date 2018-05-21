@@ -21,6 +21,7 @@ export class Deleted implements Changed {
 }
 
 export class Document {
+    public static readonly lineRegex: string = ".*\r?\n?";
     public readonly lines: Range[];
 
     constructor(
@@ -29,7 +30,7 @@ export class Document {
         public readonly changes: Changed[],
         public readonly stack: Range[][]
     ) {
-        this.lines = this.findAllMatches(".*\n?", new Range(0, this.text.length));
+        this.lines = this.findAllMatches(Document.lineRegex, new Range(0, this.text.length));
     }
 
     public withSelections(selections: Range[]): Document {
@@ -448,6 +449,8 @@ export class Line implements Command, Address, ForwardOffsetAddress, BackwardOff
     }
     getRangeForward(document: Document, selection: Range): Range {
         let lines = document.lines.filter((line) => line.end >= selection.end);
+        let startFirstLine: number = Math.max(selection.start, ...lines.map((line) => line.start));
+        lines.unshift(new Range(selection.start, startFirstLine));
         let offset = Math.max(0, Math.min(this.offset, lines.length - 1));
         return lines[offset];
     }

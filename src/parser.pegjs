@@ -61,7 +61,7 @@ Delete
     = "d" { return new apply.Delete(); }
 
 Search
-    = "x" regex:DelimitedRegex? { return new apply.Search(regex || ".*\\r?\\n?"); }
+    = "x" regex:DelimitedRegex? { return new apply.Search(regex || apply.Document.lineRegex); }
 
 SearchBetween
     = "y" regex:DelimitedRegex { return new apply.SearchBetween(regex); }
