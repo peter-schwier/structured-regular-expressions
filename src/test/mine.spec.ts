@@ -26,4 +26,26 @@ documentFromFile("src/test/mine.txt", [new sre.Range(0, Number.MAX_SAFE_INTEGER)
                 .that.equals("MINE.\r\n");
         });
     });
+    command('xg/Mine/p', (it) => {
+        it('count 6', (getChangedDocument) => {
+            let changed = getChangedDocument();
+            expect(changed).has.property("changes").length(6);
+            let change = changed.changes[0];
+            expect(change)
+                .is.instanceOf(sre.Printed)
+                .and.has.property("text")
+                .that.contains("Mine");
+        });
+    });
+    command('y/Mine/p', (it) => {
+        it('count 6', (getChangedDocument) => {
+            let changed = getChangedDocument();
+            expect(changed).has.property("changes").length(7);
+            let change = changed.changes[0];
+            expect(change)
+                .is.instanceOf(sre.Printed)
+                .and.has.property("text")
+                .that.does.not.contain("Mine");
+        });
+    });
 });
