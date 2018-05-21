@@ -158,7 +158,7 @@ function peg$parse(input, options) {
       peg$c13 = function() { return new apply.Delete(); },
       peg$c14 = "x",
       peg$c15 = peg$literalExpectation("x", false),
-      peg$c16 = function(regex) { return new apply.Search(regex); },
+      peg$c16 = function(regex) { return new apply.Search(regex || ".*\\r?\\n?"); },
       peg$c17 = "y",
       peg$c18 = peg$literalExpectation("y", false),
       peg$c19 = function(regex) { return new apply.SearchBetween(regex); },
@@ -637,6 +637,9 @@ function peg$parse(input, options) {
     }
     if (s1 !== peg$FAILED) {
       s2 = peg$parseRegularExpressionLiteral();
+      if (s2 === peg$FAILED) {
+        s2 = null;
+      }
       if (s2 !== peg$FAILED) {
         peg$savedPos = s0;
         s1 = peg$c16(s2);
