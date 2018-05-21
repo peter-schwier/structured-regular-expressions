@@ -119,7 +119,7 @@ export class MatchImplementation implements Match {
         let text = document.getSelectionText(new Range(0, selection.end));
         let caseInsensitive = regex.toLowerCase() === regex ? "i" : "";
         let regExp = new RegExp(regex, "g" + caseInsensitive);
-        let match = new MatchImplementation(text, regExp, selection.end, selection.end, []);
+        let match = new MatchImplementation(text, regExp, selection.start, selection.start, []);
         return match.next();
     }
 
@@ -294,16 +294,7 @@ export class NumberedSelections implements Command {
                 selections.push(selection);
             }
         });
-        return document.withSelections(
-            document.selections.filter((selection, index) => {
-                index += 1;
-                let include = this.included.reduce(
-                    (included: boolean, range: Range, index: number) =>
-                        included || (range.start <= index && index <= range.end)
-                    , false);
-                return include;
-            })
-        );
+        return document.withSelections(selections);
     }
 }
 

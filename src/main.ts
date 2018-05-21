@@ -24,7 +24,6 @@ class BaseDocument implements IDocument {
         return this.document.changes;
     }
     public apply(commands: string): IDocument {
-        // Todo: Call Parse library to get commandArray
         let parsed = <apply.Command[]> parser.parse(commands, {});
         return new BaseDocument(
             this.document.apply(parsed)

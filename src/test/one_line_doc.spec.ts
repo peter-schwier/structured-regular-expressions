@@ -2,11 +2,9 @@ import 'mocha';
 import { expect } from "chai";
 import * as sre from '../main';
 
-describe("One Line Document", () => {
-    describe("with all selected", () => {
-        let original = new sre.Document("asdf", [new sre.Range(0, 4)]);
-        it("prints the document", () => {
-            let changed = original.apply("p");
+document(new sre.Document("asdf", [new sre.Range(0, 4)]), (command) => {
+    command("p", (changed: sre.IDocument) => {
+        it('="asdf"', () => {
             expect(changed).has.property("changes").length(1);
             let change = changed.changes[0];
             expect(change)
@@ -14,17 +12,17 @@ describe("One Line Document", () => {
                 .and.has.property("text")
                 .that.equals("asdf");
         });
-        it("inserts at 0", () => {
-            let changed = original.apply("i/asdf/");
-            expect(changed).has.property("changes").length(1);
-            let change = changed.changes[0];
-            expect(change)
-                .is.instanceOf(sre.Inserted)
-                .and.has.property("offset")
-                .that.equals(0);
-        });
-        it("appends at 4", () => {
-            let changed = original.apply("a/asdf/");
+    });
+    command('i/asdf/', (changed: sre.IDocument) => {
+        expect(changed).has.property("changes").length(1);
+        let change = changed.changes[0];
+        expect(change)
+            .is.instanceOf(sre.Inserted)
+            .and.has.property("offset")
+            .that.equals(0);
+    });
+    command('a/asdf/', (changed: sre.IDocument) => {
+        it("=[4]", () => {
             expect(changed).has.property("changes").length(1);
             let change = changed.changes[0];
             expect(change)
@@ -32,8 +30,9 @@ describe("One Line Document", () => {
                 .and.has.property("offset")
                 .that.equals(4);
         });
-        it("deletes 0..4", () => {
-            let changed = original.apply("d");
+    });
+    command('d', (changed: sre.IDocument) => {
+        it("=[0-4]", () => {
             expect(changed).has.property("changes").length(1);
             let change = changed.changes[0];
             expect(change)
@@ -44,4 +43,47 @@ describe("One Line Document", () => {
             expect(range).property("end").equals(4);
         });
     });
+    command('#0a/asdf/', (changed: sre.IDocument) => {
+        it("=[0]", () => {
+            expect(changed).has.property("changes").length(1);
+            let change = changed.changes[0];
+            expect(change)
+                .is.instanceOf(sre.Inserted)
+                .and.has.property("offset")
+                .that.equals(0);
+        });
+
+    });
+    command('#0,#2p', (changed: sre.IDocument) => {
+        it('="as"', () => {
+            expect(changed).has.property("changes").length(1);
+            let change = changed.changes[0];
+            expect(change)
+                .is.instanceOf(sre.Printed)
+                .and.has.property("text")
+                .that.equals("as");
+        });
+    });
 });
+
+function document(original: sre.IDocument, description: DocumentDescription) {
+    let text = '"' + original.text + '"';
+    text += original.selections.map((selection) => '[' + selection.start + '-' + selection.end + ']').join('');
+    describe(text, () => {
+        description(commandTest);
+    });
+    function commandTest(command: string, test: (changed: sre.IDocument) => void): void {
+        describe(command, () => {
+            let changed = original.apply(command);
+            test(changed);
+        });
+    }
+}
+
+interface DocumentDescription {
+    (command: CommandTest): void;
+}
+
+interface CommandTest {
+    (command: string, test: (changed: sre.IDocument) => void): void;
+}

@@ -60,7 +60,6 @@ This design document provides specific implementation details of parsing a comma
     * [Character]
     * [Line]
     * [Regex]
-* DelimitedText = ???
 * Number = value:["0" - "9"]+
 * NumberRangeList = value:NumberRange (";" value:NumberRange)*
 * [Range] = start:Number ("-" end:Number) / {end = start;}
