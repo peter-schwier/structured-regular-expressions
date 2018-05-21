@@ -1,10 +1,12 @@
 import 'mocha';
 import { expect } from "chai";
 import * as sre from '../main';
+import { document } from './helper';
 
-document(new sre.Document("asdf", [new sre.Range(0, 4)]), (command) => {
-    command("p", (changed: sre.IDocument) => {
-        it('="asdf"', () => {
+document("asdf", [new sre.Range(0, 4)], (command) => {
+    command("p", (it) => {
+        it('="asdf"', (getChangedDocument) => {
+            let changed = getChangedDocument();
             expect(changed).has.property("changes").length(1);
             let change = changed.changes[0];
             expect(change)
@@ -13,16 +15,20 @@ document(new sre.Document("asdf", [new sre.Range(0, 4)]), (command) => {
                 .that.equals("asdf");
         });
     });
-    command('i/asdf/', (changed: sre.IDocument) => {
-        expect(changed).has.property("changes").length(1);
-        let change = changed.changes[0];
-        expect(change)
-            .is.instanceOf(sre.Inserted)
-            .and.has.property("offset")
-            .that.equals(0);
+    command('i/asdf/', (it) => {
+        it('=[0]', (getChangedDocument) => {
+            let changed = getChangedDocument();
+            expect(changed).has.property("changes").length(1);
+            let change = changed.changes[0];
+            expect(change)
+                .is.instanceOf(sre.Inserted)
+                .and.has.property("offset")
+                .that.equals(0);
+        });
     });
-    command('a/asdf/', (changed: sre.IDocument) => {
-        it("=[4]", () => {
+    command('a/asdf/', (it) => {
+        it("=[4]", (getChangedDocument) => {
+            let changed = getChangedDocument();
             expect(changed).has.property("changes").length(1);
             let change = changed.changes[0];
             expect(change)
@@ -31,8 +37,9 @@ document(new sre.Document("asdf", [new sre.Range(0, 4)]), (command) => {
                 .that.equals(4);
         });
     });
-    command('d', (changed: sre.IDocument) => {
-        it("=[0-4]", () => {
+    command('d', (it) => {
+        it("=[0-4]", (getChangedDocument) => {
+            let changed = getChangedDocument();
             expect(changed).has.property("changes").length(1);
             let change = changed.changes[0];
             expect(change)
@@ -43,8 +50,9 @@ document(new sre.Document("asdf", [new sre.Range(0, 4)]), (command) => {
             expect(range).property("end").equals(4);
         });
     });
-    command('#0a/asdf/', (changed: sre.IDocument) => {
-        it("=[0]", () => {
+    command('#0a/asdf/', (it) => {
+        it("=[0]", (getChangedDocument) => {
+            let changed = getChangedDocument();
             expect(changed).has.property("changes").length(1);
             let change = changed.changes[0];
             expect(change)
@@ -54,8 +62,9 @@ document(new sre.Document("asdf", [new sre.Range(0, 4)]), (command) => {
         });
 
     });
-    command('#0,#2p', (changed: sre.IDocument) => {
-        it('="as"', () => {
+    command('#0,#2p', (it) => {
+        it('="as"', (getChangedDocument) => {
+            let changed = getChangedDocument();
             expect(changed).has.property("changes").length(1);
             let change = changed.changes[0];
             expect(change)
@@ -65,25 +74,3 @@ document(new sre.Document("asdf", [new sre.Range(0, 4)]), (command) => {
         });
     });
 });
-
-function document(original: sre.IDocument, description: DocumentDescription) {
-    let text = '"' + original.text + '"';
-    text += original.selections.map((selection) => '[' + selection.start + '-' + selection.end + ']').join('');
-    describe(text, () => {
-        description(commandTest);
-    });
-    function commandTest(command: string, test: (changed: sre.IDocument) => void): void {
-        describe(command, () => {
-            let changed = original.apply(command);
-            test(changed);
-        });
-    }
-}
-
-interface DocumentDescription {
-    (command: CommandTest): void;
-}
-
-interface CommandTest {
-    (command: string, test: (changed: sre.IDocument) => void): void;
-}
