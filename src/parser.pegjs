@@ -20,6 +20,7 @@ Command
     / Character
     / Line
     / Regex
+    / EndOfFile
 
 Address
     = SimpleAddress
@@ -30,6 +31,7 @@ SimpleAddress
     / Character
     / Line
     / Regex
+    / EndOfFile
 
 ForwardOffsetAddress
     = Character
@@ -128,6 +130,9 @@ Character
 
 Line
     = offset:Number { return new apply.Line(offset); }
+
+EndOfFile
+    = "$" { return new apply.Line(Number.MAX_SAFE_INTEGER); }
 
 Regex
     = regex:DelimitedRegex { return new apply.Regex(regex); }

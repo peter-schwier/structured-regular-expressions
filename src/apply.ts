@@ -262,12 +262,12 @@ export class NegatedConditional implements Command {
 export class Modulus implements Command {
     constructor(private readonly modulus: number) { }
     apply(document: Document): Document {
-        return document.withSelections(
+        let selections =
             document.selections.filter(
                 (selection, index) =>
-                    (index % this.modulus) === 0
-            )
-        );
+                    ((index + 1) % this.modulus) === 0
+            );
+        return document.withSelections(selections);
     }
 }
 
@@ -451,9 +451,11 @@ export class Line implements Command, Address, ForwardOffsetAddress, BackwardOff
         let lines = document.lines.filter((line) => line.start >= start);
         // Add the zero line
         let startOfFirstLine = Math.min(
-            Number.MAX_SAFE_INTEGER, 
+            Number.MAX_SAFE_INTEGER,
             ...lines.map((line) => line.start));
         lines.unshift(new Range(start, startOfFirstLine));
+        // add the space after the last line
+        lines.push(new Range(lines[lines.length - 1].end, lines[lines.length - 1].end));
         let offset = Math.max(0, Math.min(this.offset, lines.length - 1));
         return lines[offset];
     }
@@ -462,9 +464,11 @@ export class Line implements Command, Address, ForwardOffsetAddress, BackwardOff
         let lines = document.lines.reverse().filter((line) => line.end <= end);
         // Add the zero line
         let endOfFirstLine = Math.max(
-            0, 
+            0,
             ...lines.map((line) => line.end));
         lines.unshift(new Range(endOfFirstLine, end));
+        // add the space after the last line
+        lines.push(new Range(lines[lines.length - 1].start, lines[lines.length - 1].start));
         let offset = Math.max(0, Math.min(this.offset, lines.length - 1));
         return lines[offset];
     }

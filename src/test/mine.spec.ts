@@ -142,4 +142,26 @@ documentFromFile("src/test/mine.txt", [new sre.Range(0, 0)], (command) => {
                 .is.instanceOf(sre.Deleted);
         });
     });
+    command(',x/Mine/+-%3p', (it) => {
+        it('count 2', (getChangedDocument) => {
+            let changed = getChangedDocument();
+            expect(changed).has.property("changes").length(2);
+            let change = changed.changes[0];
+            expect(change)
+                .is.instanceOf(sre.Printed)
+                .and.has.property("text")
+                .that.equals("Mine by the sign in the scarlet prison\r\n");
+        });
+    });
+    command('$-1p', (it) => {
+        it('starts with "From"', (getChangedDocument) => {
+            let changed = getChangedDocument();
+            expect(changed).has.property("changes").length(1);
+            let change = changed.changes[0];
+            expect(change)
+                .is.instanceOf(sre.Printed)
+                .and.has.property("text")
+                .that.contains("From");
+        });
+    });
 });
