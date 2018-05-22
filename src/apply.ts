@@ -155,13 +155,21 @@ export class Print implements Command {
     }
 }
 
+function parseInputText(text: string): string {
+    text = text.replace(/\\n/, '\n');
+    text = text.replace(/\\t/, '\t');
+    text = text.replace(/\\r/, '\r');
+    text = text.replace(/\\\//, '/');
+    return text;
+}
+
 export class Insert implements Command {
     constructor(private readonly text: string) { }
     apply(document: Document): Document {
         return document.addChanges(
             document.selections.map(
                 (selection) =>
-                    new Inserted(selection.start, this.text)
+                    new Inserted(selection.start, parseInputText(this.text))
             )
         );
     }
@@ -173,7 +181,7 @@ export class Append implements Command {
         return document.addChanges(
             document.selections.map(
                 (selection) =>
-                    new Inserted(selection.end, this.text)
+                    new Inserted(selection.end, parseInputText(this.text))
             )
         );
     }
@@ -185,7 +193,7 @@ export class Replace implements Command {
         return document.addChanges(
             document.selections.map(
                 (selection) =>
-                    new Replaced(selection, this.text)
+                    new Replaced(selection, parseInputText(this.text))
             )
         );
     }

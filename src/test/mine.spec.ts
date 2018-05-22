@@ -164,4 +164,15 @@ documentFromFile("src/test/mine.txt", [new sre.Range(0, 0)], (command) => {
                 .that.contains("From");
         });
     });
+    command('/Mine/c/Mine\\n/', (it) => {
+        it('contains \\n', (getChangedDocument) => {
+            let changed = getChangedDocument();
+            expect(changed).has.property("changes").length(1);
+            let change = changed.changes[0];
+            expect(change)
+                .is.instanceOf(sre.Replaced)
+                .and.has.property("text")
+                .that.contains("\n");
+        });
+    });
 });

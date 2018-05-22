@@ -67,7 +67,7 @@ Append
     = "a" text:DelimitedText { return new apply.Append(text); }
 
 Replace
-    = "a" text:DelimitedText { return new apply.Replace(text); }
+    = "c" text:DelimitedText { return new apply.Replace(text); }
 
 Delete
     = "d" { return new apply.Delete(); }
