@@ -106,4 +106,26 @@ documentFromFile("src/test/mine.txt", [new sre.Range(0, 0)], (command) => {
                 .that.equals("Mine by the royal seal!\r\n");
         });
     });
+    command(',x/Mine/+p', (it) => {
+        it('="Mine by the royal seal!"', (getChangedDocument) => {
+            let changed = getChangedDocument();
+            expect(changed).has.property("changes").length(6);
+            let change = changed.changes[0];
+            expect(change)
+                .is.instanceOf(sre.Printed)
+                .and.has.property("text")
+                .that.equals("Mine by the royal seal!\r\n");
+        });
+    });
+    command(',xg/Mine/x/by/p', (it) => {
+        it('count 4', (getChangedDocument) => {
+            let changed = getChangedDocument();
+            expect(changed).has.property("changes").length(4);
+            let change = changed.changes[0];
+            expect(change)
+                .is.instanceOf(sre.Printed)
+                .and.has.property("text")
+                .that.equals("by");
+        });
+    });
 });

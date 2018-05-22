@@ -46,7 +46,7 @@ ComplexAddress
     / SimpleAddress
 
 ForwardOrBackward
-    = start:SimpleAddress 
+    = start:SimpleAddress?
     offsets:(ForwardOffset / BackwardOffset)+ {
         offsets.forEach((offset) => {
             start = offset(start);
@@ -95,19 +95,28 @@ NumberedSelections
     = "@" included:NumberRangeList { return new apply.NumberedSelections(included); }
 
 Span
-    = start:ComplexAddress "," end:ComplexAddress { return new apply.Span(start, end); }
+    = start:ComplexAddress? "," end:ComplexAddress? { 
+        return new apply.Span(
+            start || new apply.Line(0), 
+            end || new apply.Line(Number.MAX_SAFE_INTEGER)
+        ); 
+    }
 
 ForwardOffset
     = "+" next:ForwardOffsetAddress? { 
         return function(start) { 
-            return new apply.Forward(start, next || new apply.Line(1)); 
+            return new apply.Forward(
+                start || new apply.Dot(), 
+                next || new apply.Line(1)); 
         }; 
     }
 
 BackwardOffset
     = "-" next:BackwardOffsetAddress { 
         return function(start) { 
-            return new apply.Backward(start, next || new apply.Line(1)); 
+            return new apply.Backward(
+                start || new apply.Dot(), 
+                next || new apply.Line(1)); 
         }; 
     }
 

@@ -188,19 +188,28 @@ function peg$parse(input, options) {
       peg$c38 = function(included) { return new apply.NumberedSelections(included); },
       peg$c39 = ",",
       peg$c40 = peg$literalExpectation(",", false),
-      peg$c41 = function(start, end) { return new apply.Span(start, end); },
+      peg$c41 = function(start, end) { 
+              return new apply.Span(
+                  start || new apply.Line(0), 
+                  end || new apply.Line(Number.MAX_SAFE_INTEGER)
+              ); 
+          },
       peg$c42 = "+",
       peg$c43 = peg$literalExpectation("+", false),
       peg$c44 = function(next) { 
               return function(start) { 
-                  return new apply.Forward(start, next || new apply.Line(1)); 
+                  return new apply.Forward(
+                      start || new apply.Dot(), 
+                      next || new apply.Line(1)); 
               }; 
           },
       peg$c45 = "-",
       peg$c46 = peg$literalExpectation("-", false),
       peg$c47 = function(next) { 
               return function(start) { 
-                  return new apply.Backward(start, next || new apply.Line(1)); 
+                  return new apply.Backward(
+                      start || new apply.Dot(), 
+                      next || new apply.Line(1)); 
               }; 
           },
       peg$c48 = ".",
@@ -541,6 +550,9 @@ function peg$parse(input, options) {
 
     s0 = peg$currPos;
     s1 = peg$parseSimpleAddress();
+    if (s1 === peg$FAILED) {
+      s1 = null;
+    }
     if (s1 !== peg$FAILED) {
       s2 = [];
       s3 = peg$parseForwardOffset();
@@ -923,6 +935,9 @@ function peg$parse(input, options) {
 
     s0 = peg$currPos;
     s1 = peg$parseComplexAddress();
+    if (s1 === peg$FAILED) {
+      s1 = null;
+    }
     if (s1 !== peg$FAILED) {
       if (input.charCodeAt(peg$currPos) === 44) {
         s2 = peg$c39;
@@ -933,6 +948,9 @@ function peg$parse(input, options) {
       }
       if (s2 !== peg$FAILED) {
         s3 = peg$parseComplexAddress();
+        if (s3 === peg$FAILED) {
+          s3 = null;
+        }
         if (s3 !== peg$FAILED) {
           peg$savedPos = s0;
           s1 = peg$c41(s1, s3);
