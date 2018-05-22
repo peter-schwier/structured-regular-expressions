@@ -128,4 +128,18 @@ documentFromFile("src/test/mine.txt", [new sre.Range(0, 0)], (command) => {
                 .that.equals("by");
         });
     });
+    command('/Bars/+-pd', (it) => {
+        it('count 1', (getChangedDocument) => {
+            let changed = getChangedDocument();
+            expect(changed).has.property("changes").length(2);
+            let change = changed.changes[0];
+            expect(change)
+                .is.instanceOf(sre.Printed)
+                .and.has.property("text")
+                .that.equals("Bars cannot conceal!\r\n");
+            change = changed.changes[1];
+            expect(change)
+                .is.instanceOf(sre.Deleted);
+        });
+    });
 });

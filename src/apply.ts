@@ -458,9 +458,14 @@ export class Line implements Command, Address, ForwardOffsetAddress, BackwardOff
         return lines[offset];
     }
     getRangeBackward(document: Document, selection: Range): Range {
-        let lines = document.lines.filter((line) => line.end >= selection.end);
+        let end = selection.start;
+        let lines = document.lines.reverse().filter((line) => line.end <= end);
+        // Add the zero line
+        let endOfFirstLine = Math.max(
+            0, 
+            ...lines.map((line) => line.end));
+        lines.unshift(new Range(endOfFirstLine, end));
         let offset = Math.max(0, Math.min(this.offset, lines.length - 1));
-        offset = (lines.length - 1) - offset;
         return lines[offset];
     }
 }

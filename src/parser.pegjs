@@ -112,7 +112,7 @@ ForwardOffset
     }
 
 BackwardOffset
-    = "-" next:BackwardOffsetAddress { 
+    = "-" next:BackwardOffsetAddress? { 
         return function(start) { 
             return new apply.Backward(
                 start || new apply.Dot(), 
