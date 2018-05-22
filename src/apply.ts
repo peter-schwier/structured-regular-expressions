@@ -134,7 +134,6 @@ export class MatchImplementation implements Match {
             // zero length match, means no match
             return undefined;
         }
-        result.shift(); // Remove the full text of the match
         return new MatchImplementation(
             this.text,
             this.regex,
@@ -448,9 +447,13 @@ export class Line implements Command, Address, ForwardOffsetAddress, BackwardOff
         return range;
     }
     getRangeForward(document: Document, selection: Range): Range {
-        let lines = document.lines.filter((line) => line.end >= selection.end);
-        let startFirstLine: number = Math.max(selection.start, ...lines.map((line) => line.start));
-        lines.unshift(new Range(selection.start, startFirstLine));
+        let start = selection.end;
+        let lines = document.lines.filter((line) => line.start >= start);
+        // Add the zero line
+        let startOfFirstLine = Math.min(
+            Number.MAX_SAFE_INTEGER, 
+            ...lines.map((line) => line.start));
+        lines.unshift(new Range(start, startOfFirstLine));
         let offset = Math.max(0, Math.min(this.offset, lines.length - 1));
         return lines[offset];
     }

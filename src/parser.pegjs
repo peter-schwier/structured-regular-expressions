@@ -16,23 +16,20 @@ Command
     / PopSelections
     / NumberedSelections
     / Span
-    /*
-    / Forward
-    / Backward
-    */
+    / ForwardOrBackward
     / Character
     / Line
     / Regex
 
 Address
+    = SimpleAddress
+    / ComplexAddress
+
+SimpleAddress
     = Dot
     / Character
     / Line
     / Regex
-    /*
-    / Forward
-    / Backward
-    */
 
 ForwardOffsetAddress
     = Character
@@ -43,6 +40,19 @@ BackwardOffsetAddress
     = Character
     / Line
     / Regex
+
+ComplexAddress
+    = ForwardOrBackward
+    / SimpleAddress
+
+ForwardOrBackward
+    = start:SimpleAddress 
+    offsets:(ForwardOffset / BackwardOffset)+ {
+        offsets.forEach((offset) => {
+            start = offset(start);
+        });
+        return start;
+    }
 
 
 Print 
@@ -85,13 +95,21 @@ NumberedSelections
     = "@" included:NumberRangeList { return new apply.NumberedSelections(included); }
 
 Span
-    = start:Address "," end:Address { return new apply.Span(start, end); }
+    = start:ComplexAddress "," end:ComplexAddress { return new apply.Span(start, end); }
 
-Forward
-    = start:Address "+" next:ForwardOffsetAddress { return apply.Forward(start, next); }
+ForwardOffset
+    = "+" next:ForwardOffsetAddress? { 
+        return function(start) { 
+            return new apply.Forward(start, next || new apply.Line(1)); 
+        }; 
+    }
 
-Backward
-    = start:Address "-" next:BackwardOffsetAddress { return new apply.Backward(start, next); }
+BackwardOffset
+    = "-" next:BackwardOffsetAddress { 
+        return function(start) { 
+            return new apply.Backward(start, next || new apply.Line(1)); 
+        }; 
+    }
 
 Dot
     = "." { return new apply.Dot(); }
