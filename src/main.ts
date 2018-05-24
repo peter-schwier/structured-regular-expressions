@@ -3,15 +3,8 @@ import * as apply from "./apply";
 export { Range, Changed, Printed, Inserted, Replaced, Deleted } from "./apply";
 let parser = require("./parser");
 
-export interface IDocument {
-    readonly text: string;
-    readonly selections: Range[];
-    readonly changes: Changed[];
-    apply(commands: string): IDocument;
-}
-
-class BaseDocument implements IDocument {
-    protected constructor(
+class BaseDocument implements Document {
+    constructor(
         private readonly document: apply.Document
     ) { }
     get text(): string {
@@ -23,7 +16,7 @@ class BaseDocument implements IDocument {
     get changes(): Changed[] {
         return this.document.changes;
     }
-    public apply(commands: string): IDocument {
+    public apply(commands: string): Document {
         let parsed = <apply.Command[]> parser.parse(commands, {});
         return new BaseDocument(
             this.document.apply(parsed)
@@ -31,11 +24,15 @@ class BaseDocument implements IDocument {
     }
 }
 
-export class Document extends BaseDocument {
+export class Document {
+    public readonly changes: Changed[] = [];
     constructor(
-        text: string,
-        selections: Range[] = [new Range(0, 0)]
-    ) {
-        super(new apply.Document(text, selections, [], []));
+        public readonly text: string,
+        public readonly selections: Range[] = [new Range(0, 0)]
+    ) {}
+    public apply(commands: string): Document {
+        let document = new apply.Document(this.text, this.selections, this.changes, []);
+        let original = new BaseDocument(document);
+        return original.apply(commands);
     }
 }

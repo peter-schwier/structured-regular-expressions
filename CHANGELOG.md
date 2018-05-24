@@ -3,5 +3,11 @@ All notable changes to the "structured-regular-expression-editor" extension will
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
+## 0.0.3
+- Add typescript typing
+
+## 0.0.2
+- Include parser.js in out folder
+
+## 0.0.1
 - Initial release

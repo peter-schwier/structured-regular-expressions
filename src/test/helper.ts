@@ -2,7 +2,7 @@ import 'mocha';
 import * as fs from 'fs';
 import * as sre from '../main';
 
-interface Commands {
+export interface Commands {
     (
         command: (
             command: string,
@@ -10,7 +10,7 @@ interface Commands {
                 commandTest: (
                     testName: string,
                     test: (
-                        getChangedDocument: () => sre.IDocument
+                        getChangedDocument: () => sre.Document
                     ) => void
                 ) => void
             ) => void
@@ -47,7 +47,7 @@ export function documentFromFile(
 function documentFromBuilder(
     name: string,
     selections: sre.Range[],
-    getDocument: () => sre.IDocument,
+    getDocument: () => sre.Document,
     test: Commands
 ): void {
     describe(

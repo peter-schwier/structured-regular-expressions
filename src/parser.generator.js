@@ -13,3 +13,4 @@ var parser = pegjs.generate(
 );
 
 fs.writeFileSync("./src/parser.js", parser);
+fs.writeFileSync("./out/parser.js", parser);
