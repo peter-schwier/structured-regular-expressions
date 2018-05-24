@@ -5,7 +5,7 @@
  */
 
 "use strict";
-let apply = require('./apply');
+let apply = require("./apply");
 
 function peg$subclass(child, parent) {
   function ctor() { this.constructor = child; }

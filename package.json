@@ -2,7 +2,7 @@
     "name": "structured-regular-expressions",
     "displayName": "Structured Regular Expressions",
     "description": "A library to implement Structured Regular Expressions as described in the SAM text editor.",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "publisher": "peterschwier",
     "main": "./out/main.js",
     "types": "./out/main.d.ts",

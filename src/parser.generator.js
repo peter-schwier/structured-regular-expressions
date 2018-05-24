@@ -12,5 +12,7 @@ var parser = pegjs.generate(
     }
 );
 
+parser = parser.replace(/"use strict";/, '"use strict";\nlet apply = require("./apply");');
+
 fs.writeFileSync("./src/parser.js", parser);
 fs.writeFileSync("./out/parser.js", parser);
