@@ -1,0 +1,44 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "mocha:watch",
+            "isBackground": true,
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "owner": "mocha",
+                "fileLocation": "relative",
+                "pattern": {
+                    "regexp": "^MOCHA ERROR ([^:]+):([^:]+):([^ ]+) (.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "message": 4
+                },
+                "background": {
+                    "activeOnStart": false,
+                    "beginsPattern": "^MOCHA START",
+                    "endsPattern": "^MOCHA ENDS"
+                }
+            }
+        },
+        {
+            "type": "npm",
+            "script": "tsc:watch",
+            "problemMatcher": [
+                "$tsc-watch"
+            ],
+            "isBackground": true,
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ]
+}
