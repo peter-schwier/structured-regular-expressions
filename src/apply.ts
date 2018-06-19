@@ -155,11 +155,29 @@ export class Print implements Command {
     }
 }
 
-function parseInputText(text: string): string {
-    text = text.replace(/\\n/, '\n');
-    text = text.replace(/\\t/, '\t');
-    text = text.replace(/\\r/, '\r');
-    text = text.replace(/\\\//, '/');
+function parseInputText(document: Document, selection: Range, text: string): string {
+    let escapes = [
+        { letter: 'n', text: '\n' },
+        { letter: 't', text: '\t' },
+        { letter: 'v', text: '\v' },
+        { letter: 'r', text: '\r' },
+        { letter: '/', text: '/' },
+        { letter: '\\', text: '\\' },
+        { letter: '0', text: '\0' },
+        { letter: 'f', text: '\f' },
+    ];
+    let values: any[] = [document.getSelectionText(selection)];
+    if (selection instanceof MatchImplementation) {
+        values = selection.values;
+    }
+    escapes.push({ letter: '$', text: values[0] });
+    for (let i = 1; i <= 9; i++) {
+        escapes.push({ letter: '' + i, text: values.length >= i ? values[i] : '' });
+    }
+    escapes.forEach((escape) => {
+        let pattern = '\\' + escape.letter;
+        text = text.replace(pattern, escape.text);
+    });
     return text;
 }
 
@@ -169,7 +187,7 @@ export class Insert implements Command {
         return document.addChanges(
             document.selections.map(
                 (selection) =>
-                    new Inserted(selection.start, parseInputText(this.text))
+                    new Inserted(selection.start, parseInputText(document, selection, this.text))
             )
         );
     }
@@ -181,7 +199,7 @@ export class Append implements Command {
         return document.addChanges(
             document.selections.map(
                 (selection) =>
-                    new Inserted(selection.end, parseInputText(this.text))
+                    new Inserted(selection.end, parseInputText(document, selection, this.text))
             )
         );
     }
@@ -193,7 +211,7 @@ export class Replace implements Command {
         return document.addChanges(
             document.selections.map(
                 (selection) =>
-                    new Replaced(selection, parseInputText(this.text))
+                    new Replaced(selection, parseInputText(document, selection, this.text))
             )
         );
     }
